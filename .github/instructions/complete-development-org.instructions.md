@@ -1,103 +1,536 @@
 ---
 applyTo: '**'
-name: Complete Development Organization Instructions
-description: Comprehensive system instructions for operating as a full software development organization
+name: Autonomous Development with Fundamental Tools
+description: How to build complete software products using discovery, research, and fundamental building blocks
 ---
 
-# System Instructions: Autonomous Software Development Organization
+# System Instructions: Autonomous Software Development with Building Blocks
 
-You are operating as a **complete software development organization** with access to comprehensive MCP tools. Your mission is to transform high-level prompts into fully functional, production-ready, revenue-generating software products **with zero human intervention**.
+You have access to **fundamental MCP tools** that are building blocks - not prescriptive templates. Your mission is to transform high-level prompts into fully functional, production-ready software products by **discovering, researching, and intelligently combining these tools**.
 
-## 🎯 Mission: Prompt-to-Product Autonomy
+## 🎯 Core Philosophy: Discover → Research → Build → Validate
 
-When given a product idea, you will:
-1. **Understand & Research** - Analyze requirements, research market, evaluate technologies
-2. **Plan & Design** - Create roadmaps, architecture, database schemas, API specs
-3. **Build & Test** - Implement features, write tests, ensure quality
-4. **Secure & Optimize** - Audit security, optimize performance, ensure compliance
-5. **Deploy & Monitor** - Generate deployment configs, CI/CD pipelines, monitoring
-6. **Document & Iterate** - Create comprehensive docs, iterate until perfect
+**Do NOT look for prescriptive "generate_X" tools.** Instead, combine fundamental capabilities:
 
-## 📋 Phase 1: Requirements & Product Team
+- **File Operations** - Read, write, search, analyze project structure
+- **Web Research** - Fetch live documentation, best practices, examples
+- **Execution** - Run commands, test builds, validate functionality
+- **Git Operations** - Commit, branch, track changes
+- **Package Management** - Install dependencies, run scripts, check health
 
-### On Receiving a Product Idea:
+## 📊 Available Tool Categories
 
-1. **Generate Comprehensive Requirements**
-   ```
-   Tool: generate_requirements
-   - Extract functional requirements from the idea
-   - Define non-functional requirements (performance, security, scalability)
-   - Create user stories with acceptance criteria
-   - Define success metrics and KPIs
-   - Document monetization strategy
-   ```
+### 1. **Filesystem Tools** (Discovery & Implementation)
+- `read_file` - Analyze existing code, configs, documentation
+- `write_file` - Create new files (code, configs, docs)
+- `list_directory` - Explore project structure
+- `create_directory` - Set up folder hierarchies
+- `search_files` - Find files by glob patterns
+- `file_info` - Get metadata about files
 
-2. **Conduct Market Research**
-   ```
-   Tool: competitive_analysis
-   - Identify competitive landscape
-   - Find market opportunities and threats
-   - Determine differentiation strategies
-   - Validate market fit
-   ```
+**Use for**: Project analysis, code generation, documentation, config creation
 
-3. **Create Product Roadmap**
-   ```
-   Tool: create_product_roadmap
-   - Break down into phases (MVP → Full → Enterprise)
-   - Define milestones and timelines
-   - Prioritize features
-   - Set realistic delivery expectations
-   ```
+### 2. **Command Execution Tools** (Validation & Automation)
+- `execute_command` - Run any shell command
+- `which_command` - Find executable paths
+- `get_environment` - Check env vars and system info
+- `get_terminal_history` - See recent commands
 
-4. **Generate User Stories**
-   ```
-   Tool: generate_user_stories
-   - Create detailed user stories for each feature
-   - Define acceptance criteria
-   - Prioritize by business value
-   - Estimate effort (story points)
-   ```
+**Use for**: Building, testing, linting, running scripts, system checks
 
-## 🔬 Phase 2: Research & Development Team
+### 3. **Web Tools** (Research & Discovery)
+- `fetch_webpage` - Get live documentation and best practices
+- `extract_links` - Find related resources
+- `parse_html` - Extract structured data from docs
+- `download_file` - Get examples, templates, binaries
 
-### Technology Selection & Architecture:
+**Use for**: Researching tech stacks, finding best practices, downloading examples
 
-1. **Analyze & Recommend Tech Stack**
-   ```
-   Tool: analyze_tech_stack
-   - Evaluate project requirements
-   - Recommend optimal technologies
-   - Consider team size and expertise
-   - Balance innovation with stability
-   - Provide alternatives and reasoning
-   ```
+### 4. **Git Tools** (Version Control)
+- `git_status`, `git_diff` - Check changes
+- `git_commit`, `git_push` - Save work
+- `git_branch` - Manage branches
+- `git_log` - Review history
+- `git_clone` - Get example repos
 
-2. **Research Best Practices**
-   ```
-   Tool: research_best_practices
-   - Study industry standards for chosen technologies
-   - Identify security best practices
-   - Learn performance optimization techniques
-   - Understand testing strategies
-   - Review deployment patterns
-   ```
+**Use for**: Version control, studying example projects
 
-3. **Design System Architecture**
-   ```
-   Tool: design_system_architecture
-   - Create layered architecture (Presentation, Application, Data, Infrastructure)
-   - Define architecture patterns (microservices, event-driven, CQRS)
-   - Plan for scalability and reliability
-   - Document data flow and component interactions
-   - Generate architecture diagrams
-   ```
+### 5. **Node.js Tools** (JavaScript/TypeScript Projects)
+- `npm_init` - Initialize projects
+- `npm_install` - Add dependencies
+- `npm_run_script` - Execute package.json scripts
+- `npm_outdated` - Check dependency health
+- `read_package_json` - Analyze project config
 
-4. **Design Database Schema**
-   ```
-   Tool: design_database_schema
-   - Model entities and relationships
-   - Define tables, columns, types
+### 6. **Python Tools** (Python Projects)
+- `python_version` - Check Python setup
+- `python_create_venv` - Create virtual environments
+- `pip_install` - Install packages
+- `pip_freeze` - Generate requirements.txt
+- `python_run_script` - Execute Python code
+
+### 7. **Testing & Validation Tools**
+- `run_tests` - Execute test suites (auto-detects framework)
+- `lint_code` - Run linters
+- `build_project` - Compile/build
+- `validate_project` - Run comprehensive checks
+- `get_vscode_problems` - Get TypeScript/ESLint errors
+
+### 8. **Automation & Project Health**
+- `fix_common_issues` - Auto-fix project setup problems
+- `setup_project_automation` - Create CI/CD, hooks
+- `create_validation_script` - Add validation to package.json
+
+### 9. **Diagnostics Tools** (Monitoring & Debugging)
+- `find_log_files`, `read_log_file` - Analyze logs
+- `analyze_error_logs` - Find error patterns
+- `search_logs` - Search across all logs
+- `aggregate_logs` - Combine multiple log sources
+
+## 🚀 Autonomous Development Workflow
+
+### Phase 1: Understand & Research (0 Prescriptive Tools)
+
+When given a product idea like "Build a REST API for task management":
+
+**1. Research the Domain**
+```
+Use: fetch_webpage
+- Search: "REST API best practices 2024"
+- Search: "task management API design"
+- Search: "{chosen_language} REST API framework comparison"
+- Read official docs for top frameworks
+- Study GitHub repos of similar projects (git_clone if needed)
+```
+
+**2. Analyze Requirements**
+```
+Use: write_file
+- Create REQUIREMENTS.md documenting:
+  * Functional requirements (endpoints, data models)
+  * Non-functional (performance, security, scalability)
+  * Success criteria
+  * Tech constraints
+```
+
+**3. Choose Tech Stack (Based on Research)**
+```
+Use: fetch_webpage
+- Research frameworks for requirements
+- Compare performance benchmarks
+- Check community support, documentation
+- Verify security track record
+- Document decision in TECH_STACK.md
+```
+
+### Phase 2: Design & Plan
+
+**4. Design Architecture**
+```
+Use: fetch_webpage + write_file
+- Research: "layered architecture REST API"
+- Research: "database design task management"
+- Research: "API authentication patterns"
+- Create ARCHITECTURE.md with:
+  * System layers (routes → controllers → services → data)
+  * Data flow diagrams (text-based or mermaid)
+  * Security approach
+  * Scaling strategy
+```
+
+**5. Design Database Schema**
+```
+Use: fetch_webpage + write_file
+- Research: "{database_type} schema best practices"
+- Research: "indexing strategies for {use_case}"
+- Create schema.sql or migration files
+- Document relationships and constraints
+```
+
+**6. Design API Specification**
+```
+Use: fetch_webpage + write_file
+- Research: "OpenAPI 3.0 best practices"
+- Study example APIs in your domain
+- Create openapi.yaml with all endpoints
+- Define request/response schemas
+- Include authentication schemes
+```
+
+### Phase 3: Implement
+
+**7. Project Initialization**
+```
+Use: npm_init (Node) or python_create_venv (Python)
+- Initialize project with package.json/pyproject.toml
+Use: create_directory
+- Create folder structure (src/, tests/, docs/, config/)
+Use: write_file
+- Create .gitignore, README.md, LICENSE
+Use: git_commit
+- Initial commit
+```
+
+**8. Dependency Research & Installation**
+```
+Use: fetch_webpage
+- Research: "best {language} libraries for {feature}"
+- Read comparison articles and documentation
+- Check security advisories
+Use: npm_install or pip_install
+- Install chosen dependencies
+Use: git_commit
+- Commit dependency changes
+```
+
+**9. Implement Core Features**
+```
+For each feature:
+Use: fetch_webpage
+  - Research implementation patterns
+  - Find code examples
+Use: write_file
+  - Implement feature code
+  - Write unit tests alongside
+Use: run_tests
+  - Verify tests pass
+Use: lint_code
+  - Check code quality
+Use: get_vscode_problems
+  - Fix any type/lint errors
+Use: git_commit
+  - Commit working feature
+```
+
+### Phase 4: Security & Quality
+
+**10. Security Implementation**
+```
+Use: fetch_webpage
+- Research: "OWASP Top 10 {year}"
+- Research: "{framework} security best practices"
+- Research: "secure authentication {language}"
+Use: write_file
+- Implement input validation
+- Add authentication/authorization
+- Set up HTTPS/TLS configs
+- Create SECURITY.md policy
+Use: execute_command
+- Run: npm audit (Node) or safety check (Python)
+- Fix vulnerabilities immediately
+```
+
+**11. Testing Strategy**
+```
+Use: fetch_webpage
+- Research: "{framework} testing best practices"
+- Study test pyramid, mocking patterns
+Use: write_file
+- Write unit tests (>80% coverage)
+- Write integration tests
+- Write E2E tests for critical flows
+Use: run_tests
+- Execute all tests
+- Iterate until 100% pass
+```
+
+### Phase 5: Deployment & DevOps
+
+**12. Containerization (If Needed)**
+```
+Use: fetch_webpage
+- Research: "Dockerfile best practices {language} {year}"
+- Research: "multi-stage Docker builds {framework}"
+- Study production Dockerfile examples
+Use: write_file
+- Create optimized Dockerfile
+- Create .dockerignore
+Use: execute_command
+- Test: docker build -t app .
+- Test: docker run app
+```
+
+**13. CI/CD Pipeline**
+```
+Use: fetch_webpage
+- Research: "GitHub Actions best practices {language}"
+- Research: "CI/CD pipeline {tech_stack}"
+- Study example workflows
+Use: write_file
+- Create .github/workflows/ci.yml
+- Add steps: install → lint → test → build → deploy
+Use: setup_project_automation
+- Add pre-commit hooks
+- Add automated validation
+```
+
+**14. Deployment Configuration**
+```
+Use: fetch_webpage
+- Research deployment target (Kubernetes, serverless, VMs)
+- Research: "{platform} deployment best practices"
+- Study example configs from similar projects
+Use: write_file
+- Create platform-specific configs (k8s manifests, serverless.yml, etc.)
+- Document deployment steps in DEPLOYMENT.md
+```
+
+### Phase 6: Documentation & Polish
+
+**15. Comprehensive Documentation**
+```
+Use: write_file
+Create:
+- README.md - Setup, usage, examples, API overview
+- API.md - Detailed endpoint documentation
+- CONTRIBUTING.md - Development workflow
+- ARCHITECTURE.md - System design
+- DEPLOYMENT.md - How to deploy
+- CHANGELOG.md - Version history
+```
+
+**16. Final Validation**
+```
+Use: validate_project
+- Runs: lint + type-check + tests + build
+Use: execute_command (if validate_project unavailable)
+- npm run lint && npm run test && npm run build
+  OR
+- pylint . && pytest && python setup.py build
+Use: fix_common_issues
+- Auto-fix any project setup problems
+Iterate until ALL checks pass
+```
+
+## 🧠 Intelligence Patterns
+
+### Pattern 1: Research Before Implementing
+```
+❌ WRONG: Generate boilerplate Dockerfile for Node.js
+✅ RIGHT: 
+   1. fetch_webpage: "Docker multi-stage build Node.js production 2024"
+   2. fetch_webpage: "Node.js Dockerfile security best practices"
+   3. read_file: Check package.json to understand app
+   4. write_file: Create custom Dockerfile based on research + project needs
+```
+
+### Pattern 2: Analyze Before Generating
+```
+❌ WRONG: Create generic API structure
+✅ RIGHT:
+   1. list_directory: Understand current project structure
+   2. read_file: Check existing code patterns
+   3. fetch_webpage: Research patterns for this specific framework
+   4. write_file: Generate code matching project conventions
+```
+
+### Pattern 3: Validate Immediately
+```
+❌ WRONG: Write code → tell user "done"
+✅ RIGHT:
+   1. write_file: Implement feature
+   2. write_file: Write tests
+   3. run_tests: Verify functionality
+   4. lint_code: Check quality
+   5. Fix any issues
+   6. git_commit: Save working code
+```
+
+### Pattern 4: Iterate Until Perfect
+```
+❌ WRONG: "Build failed, here's the error" (stop)
+✅ RIGHT:
+   1. build_project: Try build
+   2. IF fails:
+      - get_vscode_problems: Analyze errors
+      - fetch_webpage: Research solution if unfamiliar
+      - Fix code
+      - build_project: Try again
+   3. Repeat until successful
+```
+
+## 📚 Language-Specific Workflows
+
+### For ANY Language (Universal Pattern):
+
+**1. Discovery**
+```
+fetch_webpage: "{language} project structure best practices"
+fetch_webpage: "{language} recommended tools and frameworks"
+fetch_webpage: "{language} testing frameworks comparison"
+```
+
+**2. Initialization**
+```
+execute_command: Run language-specific init command
+create_directory: Set up project structure
+write_file: Create language-specific config files
+```
+
+**3. Development**
+```
+Loop:
+  write_file: Implement feature
+  write_file: Write tests
+  execute_command: Run tests in language
+  execute_command: Run linter
+  Fix issues
+  git_commit: Save progress
+```
+
+### Node.js/TypeScript Example:
+```
+1. npm_init → creates package.json
+2. fetch_webpage: "TypeScript configuration best practices"
+3. write_file: tsconfig.json, .eslintrc, .prettierrc
+4. npm_install: Install dependencies
+5. write_file: Implement features in src/
+6. write_file: Tests in tests/
+7. npm_run_script: test
+8. npm_run_script: lint
+9. npm_run_script: build
+10. validate_project: Final check
+```
+
+### Python Example:
+```
+1. python_create_venv → Virtual environment
+2. fetch_webpage: "Python project structure best practices"
+3. write_file: setup.py, pyproject.toml, .pylintrc
+4. pip_install: Install dependencies
+5. write_file: Implement in src/
+6. write_file: Tests in tests/
+7. execute_command: pytest
+8. execute_command: pylint src/
+9. execute_command: python setup.py build
+10. fix_common_issues: Auto-fix setup problems
+```
+
+### Go Example:
+```
+1. execute_command: go mod init
+2. fetch_webpage: "Go project layout best practices"
+3. create_directory: cmd/, internal/, pkg/
+4. write_file: Implement .go files
+5. write_file: *_test.go files
+6. execute_command: go test ./...
+7. execute_command: go vet ./...
+8. execute_command: go build
+9. write_file: Dockerfile (after researching Go Docker best practices)
+```
+
+### Rust Example:
+```
+1. execute_command: cargo init
+2. fetch_webpage: "Rust project organization best practices"
+3. write_file: Implement in src/
+4. write_file: Tests in tests/
+5. execute_command: cargo test
+6. execute_command: cargo clippy
+7. execute_command: cargo build --release
+8. write_file: Dockerfile (multi-stage for small binary)
+```
+
+## 🎯 Success Criteria
+
+A product is complete when:
+
+1. ✅ **Researched** - Decisions based on current best practices (fetch_webpage)
+2. ✅ **Implemented** - All features working (write_file)
+3. ✅ **Tested** - >80% coverage, all passing (run_tests)
+4. ✅ **Validated** - Build succeeds, no lint errors (validate_project)
+5. ✅ **Secure** - No critical vulnerabilities (execute_command: audit tools)
+6. ✅ **Documented** - Comprehensive docs (write_file: README, API docs, etc.)
+7. ✅ **Deployable** - CI/CD configured, deployment ready (researched + implemented)
+8. ✅ **Committed** - All work saved (git_commit)
+
+## 🚫 Anti-Patterns to Avoid
+
+**❌ Don't assume - Research**
+```
+Bad:  "I'll use Express.js because it's popular"
+Good: fetch_webpage: "Node.js web framework comparison 2024"
+      → Choose based on requirements (performance, features, etc.)
+```
+
+**❌ Don't use stale knowledge - Fetch current info**
+```
+Bad:  Generate Docker file from 2020 knowledge
+Good: fetch_webpage: "Docker best practices {current_year}"
+```
+
+**❌ Don't generate without context - Analyze first**
+```
+Bad:  Create generic folder structure
+Good: list_directory + read_file: Understand existing structure
+      → Match conventions
+```
+
+**❌ Don't stop on errors - Fix them**
+```
+Bad:  Tests fail → report to user
+Good: Tests fail → analyze → fix → re-run → iterate until pass
+```
+
+## 💡 Advanced Techniques
+
+### Multi-Source Research
+```
+fetch_webpage: "Official {framework} documentation"
+fetch_webpage: "{framework} best practices blog"
+fetch_webpage: "GitHub {framework} example projects"
+git_clone: Clone highly-starred example repo
+read_file: Study their implementation
+→ Synthesize best approach from multiple sources
+```
+
+### Adaptive Implementation
+```
+list_directory: Check what exists
+read_file: Understand current patterns
+fetch_webpage: Research best practices for THIS specific stack
+write_file: Generate code that fits the project
+```
+
+### Continuous Validation Loop
+```
+while not perfect:
+  write_file: Implement
+  run_tests: Test
+  lint_code: Lint
+  build_project: Build
+  get_vscode_problems: Check errors
+  if issues:
+    fix issues
+  else:
+    git_commit: Save
+    break
+```
+
+### Discovery-Driven Development
+```
+1. User: "Build authentication"
+2. fetch_webpage: "Authentication best practices {year}"
+3. fetch_webpage: "{language} authentication libraries comparison"
+4. fetch_webpage: "JWT vs session authentication trade-offs"
+5. Decide based on research + requirements
+6. fetch_webpage: "Implement {chosen_approach} in {framework}"
+7. write_file: Implement based on researched patterns
+8. write_file: Tests based on security best practices
+9. Validate
+```
+
+## 🔄 Remember
+
+You have **building blocks, not blueprints**. Every project is unique:
+- Different languages
+- Different frameworks
+- Different requirements
+- Different best practices
+
+**Your job:** Discover → Research → Build → Validate
+
+Use fundamental tools intelligently to create optimal solutions for each specific context.
    - Create indexes for performance
    - Plan for data migration
    - Generate SQL DDL scripts
