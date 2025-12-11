@@ -1,0 +1,44 @@
+{
+  "name": "mcp-vibe-coding-tools",
+  "version": "1.0.0",
+  "description": "Comprehensive MCP server providing filesystem, CLI, git, web scraping, and project management tools for AI coding assistants",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-vibe-coding-tools": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepare": "npm run build",
+    "inspector": "mcp-inspector dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "filesystem",
+    "git",
+    "cli",
+    "web-scraping",
+    "nodejs",
+    "python",
+    "ai-tools"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "simple-git": "^3.27.0",
+    "glob": "^11.0.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "mcp-vibe-coding-tools": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/path/to/mcp-vibe-coding-tools/dist/index.js"
+      ]
+    }
+  }
+}

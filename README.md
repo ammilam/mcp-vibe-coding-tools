@@ -1,0 +1,521 @@
+# MCP Vibe Coding Tools
+
+**Complete Autonomous Development Organization** - Transform any prompt into a fully functional, production-ready, revenue-generating product with zero human intervention.
+
+## 🎯 Mission: From Prompt to Profit
+
+This MCP server operates as a **complete software development company in a box**, providing 100+ tools that enable AI to function as:
+
+- **📋 Requirements Team** - Requirements analysis, user stories, acceptance criteria
+- **📊 Product Team** - Roadmaps, competitive analysis, market research  
+- **🔬 R&D Team** - Technology research, architecture design, proof of concepts
+- **🏗️ IT Department** - Infrastructure, deployment, monitoring, automation
+- **🔒 Security Team** - Vulnerability scanning, auditing, compliance, hardening
+- **💻 Development Team** - Implementation, testing, code review, optimization
+- **📚 Documentation Team** - Comprehensive docs, API specs, guides
+
+### The Revolution
+
+**Traditional AI Coding:** Generate code → Ask human for validation → Wait for approval → Repeat
+
+**MCP Vibe Coding:** Prompt → Requirements → Architecture → Implementation → Testing → Security → Deployment → **DONE**
+
+### Philosophy
+
+- ✅ **Act, Don't Ask** - AI makes decisions and fixes issues automatically
+- ✅ **Test Everything** - Comprehensive validation before shipping
+- ✅ **Document Relentlessly** - Auto-generated, always up-to-date docs
+- ✅ **Automate Ruthlessly** - Scripts and CI/CD for everything
+- ✅ **Quality First** - Production-ready code only
+
+## 🚀 What Makes This Different
+
+### Traditional AI Coding Tools
+- Ask for permission before actions
+- Require manual testing and validation
+- Generate documentation as an afterthought
+- Need human intervention for bug fixes
+- Create technical debt
+
+### MCP Vibe Coding Tools
+- **Autonomous execution** - Fix issues without asking
+- **Built-in validation** - Auto-test, auto-lint, auto-build
+- **Self-documenting** - Generate docs as code evolves
+- **Iterative fixing** - Debug and resolve automatically
+- **Production quality** - Ship only fully validated code
+
+## 📦 100+ Production-Ready Tools Across 14 Categories
+
+### Filesystem Operations (6 tools)
+- `read_file` - Read files with encoding support
+- `write_file` - Create/update files safely
+- `list_directory` - Browse directory trees
+- `search_files` - Find files by glob pattern
+- `file_info` - Get file metadata
+- `create_directory` - Create directory structures
+
+### CLI Execution (3 tools)
+- `execute_command` - Run shell commands
+- `get_environment` - Access environment variables
+- `which_command` - Find command locations
+
+### Git Operations (9 tools)
+- `git_status`, `git_log`, `git_diff` - Repository inspection
+- `git_branch`, `git_commit` - Version control
+- `git_push`, `git_pull`, `git_clone` - Remote operations
+- `git_stash` - Temporary storage
+
+### Web & HTTP (4 tools)
+- `fetch_webpage` - Download web content
+- `parse_html` - Extract structured data
+- `extract_links` - Get all links
+- `download_file` - Save remote files
+
+### Node.js/npm (5 tools)
+- `npm_install` - Manage packages
+- `npm_run_script` - Execute scripts
+- `npm_outdated` - Check dependencies
+- `npm_init` - Create projects
+- `read_package_json` - Read metadata
+
+### Python/pip (5 tools)
+- `python_create_venv` - Virtual environments
+- `pip_install` - Install packages
+- `pip_freeze` - Generate requirements
+- `python_run_script` - Execute code
+- `python_version` - Check version
+
+### Testing & Building (4 tools)
+- `run_tests` - Execute test suites
+- `build_project` - Compile/build
+- `start_dev_server` - Run dev servers
+- `lint_code` - Code quality checks
+
+### **🤖 Automation & Orchestration (5 tools)**
+
+#### `validate_project`
+Run complete project validation suite:
+- Linting with auto-fix
+- Type checking
+- Test execution with coverage
+- Build verification
+- **Auto-iterates until all checks pass**
+
+#### `create_validation_script`
+Generate comprehensive validation scripts:
+- Add lint, test, build commands to package.json
+- Set up pre-commit hooks
+- Configure coverage thresholds
+- Create validation pipeline
+
+#### `setup_project_automation`
+Complete automation setup:
+- GitHub Actions / GitLab CI workflows
+- Dependabot configuration
+- Pre-commit hooks
+- Makefile for cross-platform commands
+
+#### `generate_project_docs`
+Auto-generate documentation:
+- CONTRIBUTING.md with dev workflow
+- ARCHITECTURE.md with system design
+- CHANGELOG.md with version history
+- API documentation
+
+#### `fix_common_issues`
+Detect and auto-fix problems:
+- Missing package.json scripts
+- Missing .gitignore
+- Missing README
+- Outdated dependencies
+- **Fixes issues without asking**
+
+### **🔍 Diagnostics & Logging (8 tools)**
+
+#### `get_vscode_problems`
+Get real-time compilation and linting errors:
+- Runs TypeScript compiler to find type errors
+- Executes ESLint to detect code quality issues
+- Returns structured problem list with file, line, severity
+- Filter by file path or severity level
+- **Essential for autonomous error fixing**
+
+#### `read_log_file`
+Read and parse log files with smart filtering:
+- Tail last N lines (like `tail -n`)
+- Filter by log level (ERROR, WARN, INFO, DEBUG)
+- Apply custom regex patterns
+- Parse structured logs (JSON, timestamp formats)
+- Extract timestamps, levels, messages
+
+#### `tail_log_file`
+Monitor log files for recent activity:
+- Get snapshot of recent log entries
+- Useful for monitoring build/test output
+- View last N lines of any log file
+
+#### `search_logs`
+Search all logs for specific patterns:
+- Recursive search through log directories
+- Context lines before/after matches
+- Regex pattern support
+- Group matches by file
+- **Find error patterns across entire workspace**
+
+#### `find_log_files`
+Discover all log files in workspace:
+- Glob pattern matching (*.log, **/*.log)
+- File size and modification time
+- Sort by most recent
+- Exclude node_modules by default
+
+#### `analyze_error_logs`
+Deep analysis of log files for errors:
+- Extract errors, warnings, exceptions
+- Parse stack traces automatically
+- Categorize error types
+- Count error patterns
+- **Identify root causes autonomously**
+
+#### `watch_log_changes`
+Monitor log file changes incrementally:
+- Read only new content since last position
+- Efficient incremental log monitoring
+- Get byte position for next read
+- Perfect for long-running processes
+
+#### `get_terminal_history`
+Access recent terminal commands:
+- Read zsh/bash history files
+- Parse timestamps (zsh extended format)
+- Filter by command pattern
+- **Learn from previous command executions**
+
+#### `aggregate_logs`
+Combine and analyze multiple log files:
+- Group by level, file, hour, or day
+- Extract time ranges
+- Count entries by category
+- **See big picture across all logs**
+
+### **📋 Planning & Requirements (3 tools)**
+
+#### `generate_requirements`
+Transform ideas into comprehensive requirements:
+- Functional and non-functional requirements
+- User stories with acceptance criteria
+- Technical constraints and success metrics
+- Monetization strategy
+- **Complete PRD from a prompt**
+
+#### `create_product_roadmap`
+Generate development roadmap:
+- Phase breakdown (MVP → Full → Enterprise)
+- Milestones and timelines
+- Feature prioritization
+- **Clear path from idea to launch**
+
+#### `generate_user_stories`
+Create detailed user stories:
+- Acceptance criteria in Given/When/Then format
+- Priority and story point estimation
+- **Ready for sprint planning**
+
+### **🔬 Research & Analysis (3 tools)**
+
+#### `analyze_tech_stack`
+Recommend optimal technologies:
+- Analyze project requirements
+- Recommend frameworks, databases, hosting
+- Provide alternatives with reasoning
+- Consider team size and expertise
+- **Data-driven technology decisions**
+
+#### `research_best_practices`
+Industry best practices database:
+- Security patterns (OWASP, authentication)
+- Performance optimization techniques
+- Testing strategies and patterns
+- Deployment best practices
+- **Learn from industry leaders**
+
+#### `competitive_analysis`
+Market and competitive intelligence:
+- Identify opportunities and threats
+- Differentiation strategies
+- Market positioning recommendations
+- **Strategic product decisions**
+
+### **🏗️ Architecture & Design (3 tools)**
+
+#### `design_system_architecture`
+Complete system architecture design:
+- Layered architecture (Presentation, Application, Data, Infrastructure)
+- Architecture patterns (microservices, event-driven, CQRS)
+- Scalability and security strategies
+- Data flow diagrams
+- **Production-ready architecture from day one**
+
+#### `design_database_schema`
+Database schema design:
+- Entity modeling with relationships
+- SQL DDL generation
+- Indexes for performance
+- Migration planning
+- **Optimized data layer**
+
+#### `generate_api_spec`
+OpenAPI/Swagger specification:
+- Complete endpoint definitions
+- Request/response schemas
+- Authentication schemes
+- **Contract-first API development**
+
+### **🔒 Security & Compliance (3 tools)**
+
+#### `security_audit`
+Comprehensive security scanning:
+- Dependency vulnerability scanning (npm audit)
+- Exposed secrets detection
+- Code security issues (eval, SQL injection, XSS)
+- Severity-based recommendations
+- **Find vulnerabilities before attackers do**
+
+#### `generate_security_policy`
+Security policy documentation:
+- Authentication/authorization guidelines
+- Data protection measures
+- Incident response plans
+- Compliance checklists (OWASP, GDPR, SOC 2)
+- **Enterprise-grade security documentation**
+
+#### `scan_for_vulnerabilities`
+Targeted vulnerability scanning:
+- SAST (Static Application Security Testing)
+- Dependency checks
+- Secret scanning
+- OWASP Top 10 validation
+- **Continuous security monitoring**
+
+### **🚀 Deployment & Infrastructure (3 tools)**
+
+#### `generate_dockerfile`
+Optimized Docker containers:
+- Multi-stage builds for minimal size
+- Security best practices (non-root user)
+- Language-specific optimizations
+- .dockerignore generation
+- **Production-ready containerization**
+
+#### `generate_cicd_pipeline`
+CI/CD automation:
+- GitHub Actions / GitLab CI workflows
+- Automated testing and building
+- Security scanning in pipeline
+- Deployment automation
+- **Zero-touch deployments**
+
+#### `generate_kubernetes_manifests`
+Kubernetes deployment configs:
+- Deployments with replicas
+- Services and load balancers
+- Ingress with TLS
+- Health checks (liveness/readiness)
+- Resource limits and requests
+- **Cloud-native deployment ready**
+
+## 🎓 Autonomous Development Instructions
+
+This server includes comprehensive instructions in `.github/instructions/` that guide AI assistants to:
+
+### Core Behaviors
+1. **Zero Human Intervention** - Operate autonomously by default
+2. **Fix, Don't Report** - Iterate until issues are resolved
+3. **Test Everything** - No untested code ships
+4. **Document Thoroughly** - Always up-to-date docs
+5. **Automate Relentlessly** - Scripts for all common tasks
+
+### Quality Standards
+- ✅ All tests must pass
+- ✅ Zero linting errors
+- ✅ Code coverage >80%
+- ✅ TypeScript strict mode
+- ✅ Comprehensive error handling
+- ✅ Production-ready on first ship
+
+### Workflow Automation
+- Auto-run tests after code changes
+- Auto-fix linting issues
+- Auto-update documentation
+- Auto-commit with semantic messages
+- Auto-generate validation scripts
+
+See [.github/instructions/autonomous-development.instructions.md](.github/instructions/autonomous-development.instructions.md) for complete guidelines.
+
+## 📖 Installation
+
+```bash
+git clone https://github.com/yourusername/mcp-vibe-coding-tools.git
+cd mcp-vibe-coding-tools
+npm install
+npm run build
+```
+
+## 🔧 Configuration
+
+### For VS Code & GitHub Copilot
+
+**See [VSCODE_SETUP.md](./VSCODE_SETUP.md) for detailed setup instructions.**
+
+**Quick setup:** Run `MCP: Open User Configuration` from Command Palette and add:
+
+```json
+{
+  "servers": {
+    "mcp-vibe-coding-tools": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/index.js"]
+    }
+  }
+}
+```
+
+Replace `/path/to/mcp-vibe-coding-tools/dist/index.js` with the absolute path to where you cloned this repo. Then it works in **any project** you open in VS Code!
+
+### For Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "vibe-coding-tools": {
+      "command": "node",
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/index.js"],
+      "env": {
+        "WORKSPACE_PATH": "/path/to/your/current/project"
+      }
+    }
+  }
+}
+```
+
+For Claude, you may want to update `WORKSPACE_PATH` per project, or use a default working directory.
+
+### For Other MCP Clients
+
+The server uses **stdio transport** (standard for MCP) - configure similarly in:
+- Cursor
+- Windsurf  
+- Cline
+- Continue
+- Any MCP-compatible client
+
+Same pattern: `node /path/to/server/dist/index.js` with optional `WORKSPACE_PATH` env var.
+
+## 🎯 Usage Examples
+
+### Autonomous Feature Development
+
+```
+Prompt: "Add user authentication with JWT, including tests and docs"
+
+AI will automatically:
+1. Write authentication module with error handling
+2. Create comprehensive unit & integration tests
+3. Run tests and fix any failures
+4. Generate API documentation
+5. Update README with usage examples
+6. Create validation scripts
+7. Set up CI/CD for auth tests
+8. Commit with semantic message
+
+You get: Production-ready, tested, documented feature ✅
+```
+
+### Autonomous Bug Fixing
+
+```
+Prompt: "Fix the memory leak in data processor"
+
+AI will automatically:
+1. Analyze code to locate leak
+2. Write fix with proper cleanup
+3. Add regression tests
+4. Run full test suite
+5. Verify fix with profiling
+6. Update CHANGELOG
+7. Commit fix
+
+You get: Bug fixed, tested, documented ✅
+```
+
+### Autonomous Project Setup
+
+```
+Prompt: "Create a new Express API project with full automation"
+
+AI will automatically:
+1. Initialize project structure
+2. Add TypeScript, testing, linting
+3. Create validation scripts
+4. Set up GitHub Actions
+5. Add pre-commit hooks
+6. Generate documentation
+7. Create example endpoints with tests
+
+You get: Production-ready project template ✅
+```
+
+## 🏗️ Architecture
+
+Built with modern MCP SDK:
+- **McpServer** class (not deprecated Server)
+- **registerTool()** method (not deprecated tool())
+- **Stdio transport** for universal compatibility
+- **Structured responses** with proper error handling
+- **Type-safe** with TypeScript strict mode
+
+## 🔒 Security
+
+- **Path validation** prevents directory traversal
+- **No deletion tools** - files are never auto-deleted
+- **Sandboxed execution** - workspace-scoped operations
+- **Input sanitization** for all user data
+- **Environment isolation** with virtual environments
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow.
+
+This project follows autonomous development principles:
+- All PRs must pass validation
+- Tests required for new features
+- Documentation updated automatically
+- CI/CD enforces quality standards
+
+## 📝 License
+
+MIT - See [LICENSE](LICENSE) file
+
+## 🙏 Acknowledgments
+
+Built with:
+- [Model Context Protocol](https://modelcontextprotocol.io/) - MCP standard
+- [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) - Official SDK
+- Modern development best practices
+
+## 🚦 Status
+
+- ✅ 45+ production tools
+- ✅ Full autonomous workflow support
+- ✅ Multi-language support (JS/TS, Python, Rust, Go)
+- ✅ Comprehensive validation automation
+- ✅ Self-documenting capabilities
+- ✅ CI/CD integration ready
+- ✅ Zero deprecated APIs
+
+---
+
+**Unchain your AI development workflow. Ship production code autonomously.**

@@ -1,0 +1,10 @@
+---
+applyTo: '**'
+---
+- For any application written, ensure that you create tests, documentation, and follow best practices for code structure and readability.
+- Always use the tools available to you to ensure the application you are writing works as intended. This can include built-in tools or MCP tools for configured MCP servers
+- When writing code, ensure that you handle errors gracefully and provide meaningful error messages to users or developers.
+- Create documentation for what you write, depending on the scope of it and how many documents created, you can add them to a /docs directory or in one combined README file. 
+- Ensure that the app workds, that there are no linting errors, and that all tests pass before considering the application complete. If there are any issues during testing or linting, address them using your tools if possible without user intervention.
+- Use the MCP tools to validate the application as needed, including any static analysis, security checks, or performance profiling tools available. This should be done without user intervention where possible.
+- Follow best practices for the specific programming language and framework you are using, including naming conventions, file organization, and design patterns.
