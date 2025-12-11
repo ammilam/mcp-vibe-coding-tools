@@ -11,11 +11,6 @@ import { pythonTools } from "./tools/python.js";
 import { testTools } from "./tools/testing.js";
 import { automationTools } from "./tools/automation.js";
 import { diagnosticsTools } from "./tools/diagnostics.js";
-import { planningTools } from "./tools/planning.js";
-import { researchTools } from "./tools/research.js";
-import { architectureTools } from "./tools/architecture.js";
-import { securityTools } from "./tools/security.js";
-import { deploymentTools } from "./tools/deployment.js";
 
 // Create MCP server using modern McpServer class
 const server = new McpServer(
@@ -41,11 +36,6 @@ const allTools = [
   ...testTools,
   ...automationTools,
   ...diagnosticsTools,
-  ...planningTools,
-  ...researchTools,
-  ...architectureTools,
-  ...securityTools,
-  ...deploymentTools,
 ];
 
 // Register each tool with the server
