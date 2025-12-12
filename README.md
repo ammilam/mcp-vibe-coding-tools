@@ -31,6 +31,7 @@ This MCP server operates as a **complete software development company in a box**
 ## 🚀 What Makes This Different
 
 ### Traditional AI Coding Tools
+
 - Ask for permission before actions
 - Require manual testing and validation
 - Generate documentation as an afterthought
@@ -38,6 +39,7 @@ This MCP server operates as a **complete software development company in a box**
 - Create technical debt
 
 ### MCP Vibe Coding Tools
+
 - **Autonomous execution** - Fix issues without asking
 - **Built-in validation** - Auto-test, auto-lint, auto-build
 - **Self-documenting** - Generate docs as code evolves
@@ -47,6 +49,7 @@ This MCP server operates as a **complete software development company in a box**
 ## 📦 100+ Production-Ready Tools Across 14 Categories
 
 ### Filesystem Operations (6 tools)
+
 - `read_file` - Read files with encoding support
 - `write_file` - Create/update files safely
 - `list_directory` - Browse directory trees
@@ -55,23 +58,27 @@ This MCP server operates as a **complete software development company in a box**
 - `create_directory` - Create directory structures
 
 ### CLI Execution (3 tools)
+
 - `execute_command` - Run shell commands
 - `get_environment` - Access environment variables
 - `which_command` - Find command locations
 
 ### Git Operations (9 tools)
+
 - `git_status`, `git_log`, `git_diff` - Repository inspection
 - `git_branch`, `git_commit` - Version control
 - `git_push`, `git_pull`, `git_clone` - Remote operations
 - `git_stash` - Temporary storage
 
 ### Web & HTTP (4 tools)
+
 - `fetch_webpage` - Download web content
 - `parse_html` - Extract structured data
 - `extract_links` - Get all links
 - `download_file` - Save remote files
 
 ### Node.js/npm (5 tools)
+
 - `npm_install` - Manage packages
 - `npm_run_script` - Execute scripts
 - `npm_outdated` - Check dependencies
@@ -79,6 +86,7 @@ This MCP server operates as a **complete software development company in a box**
 - `read_package_json` - Read metadata
 
 ### Python/pip (5 tools)
+
 - `python_create_venv` - Virtual environments
 - `pip_install` - Install packages
 - `pip_freeze` - Generate requirements
@@ -86,6 +94,7 @@ This MCP server operates as a **complete software development company in a box**
 - `python_version` - Check version
 
 ### Testing & Building (4 tools)
+
 - `run_tests` - Execute test suites
 - `build_project` - Compile/build
 - `start_dev_server` - Run dev servers
@@ -94,6 +103,7 @@ This MCP server operates as a **complete software development company in a box**
 ### **🤖 Automation & Orchestration (5 tools)**
 
 #### `validate_project`
+
 Run complete project validation suite:
 - Linting with auto-fix
 - Type checking
@@ -102,6 +112,7 @@ Run complete project validation suite:
 - **Auto-iterates until all checks pass**
 
 #### `create_validation_script`
+
 Generate comprehensive validation scripts:
 - Add lint, test, build commands to package.json
 - Set up pre-commit hooks
@@ -109,6 +120,7 @@ Generate comprehensive validation scripts:
 - Create validation pipeline
 
 #### `setup_project_automation`
+
 Complete automation setup:
 - GitHub Actions / GitLab CI workflows
 - Dependabot configuration
@@ -116,6 +128,7 @@ Complete automation setup:
 - Makefile for cross-platform commands
 
 #### `generate_project_docs`
+
 Auto-generate documentation:
 - CONTRIBUTING.md with dev workflow
 - ARCHITECTURE.md with system design
@@ -123,6 +136,7 @@ Auto-generate documentation:
 - API documentation
 
 #### `fix_common_issues`
+
 Detect and auto-fix problems:
 - Missing package.json scripts
 - Missing .gitignore
@@ -141,6 +155,7 @@ Get real-time compilation and linting errors:
 - **Essential for autonomous error fixing**
 
 #### `read_log_file`
+
 Read and parse log files with smart filtering:
 - Tail last N lines (like `tail -n`)
 - Filter by log level (ERROR, WARN, INFO, DEBUG)
@@ -149,12 +164,14 @@ Read and parse log files with smart filtering:
 - Extract timestamps, levels, messages
 
 #### `tail_log_file`
+
 Monitor log files for recent activity:
 - Get snapshot of recent log entries
 - Useful for monitoring build/test output
 - View last N lines of any log file
 
 #### `search_logs`
+
 Search all logs for specific patterns:
 - Recursive search through log directories
 - Context lines before/after matches
@@ -163,6 +180,7 @@ Search all logs for specific patterns:
 - **Find error patterns across entire workspace**
 
 #### `find_log_files`
+
 Discover all log files in workspace:
 - Glob pattern matching (*.log, **/*.log)
 - File size and modification time
@@ -170,6 +188,7 @@ Discover all log files in workspace:
 - Exclude node_modules by default
 
 #### `analyze_error_logs`
+
 Deep analysis of log files for errors:
 - Extract errors, warnings, exceptions
 - Parse stack traces automatically
@@ -178,6 +197,7 @@ Deep analysis of log files for errors:
 - **Identify root causes autonomously**
 
 #### `watch_log_changes`
+
 Monitor log file changes incrementally:
 - Read only new content since last position
 - Efficient incremental log monitoring
@@ -185,6 +205,7 @@ Monitor log file changes incrementally:
 - Perfect for long-running processes
 
 #### `get_terminal_history`
+
 Access recent terminal commands:
 - Read zsh/bash history files
 - Parse timestamps (zsh extended format)
@@ -192,6 +213,7 @@ Access recent terminal commands:
 - **Learn from previous command executions**
 
 #### `aggregate_logs`
+
 Combine and analyze multiple log files:
 - Group by level, file, hour, or day
 - Extract time ranges
@@ -418,7 +440,7 @@ Same pattern: `node /path/to/server/dist/index.js` with optional `WORKSPACE_PATH
 
 ### Autonomous Feature Development
 
-```
+```text
 Prompt: "Add user authentication with JWT, including tests and docs"
 
 AI will automatically:
@@ -436,7 +458,7 @@ You get: Production-ready, tested, documented feature ✅
 
 ### Autonomous Bug Fixing
 
-```
+```text
 Prompt: "Fix the memory leak in data processor"
 
 AI will automatically:
@@ -453,7 +475,7 @@ You get: Bug fixed, tested, documented ✅
 
 ### Autonomous Project Setup
 
-```
+```text
 Prompt: "Create a new Express API project with full automation"
 
 AI will automatically:
@@ -471,6 +493,7 @@ You get: Production-ready project template ✅
 ## 🏗️ Architecture
 
 Built with modern MCP SDK:
+
 - **McpServer** class (not deprecated Server)
 - **registerTool()** method (not deprecated tool())
 - **Stdio transport** for universal compatibility

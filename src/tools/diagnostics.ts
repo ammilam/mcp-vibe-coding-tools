@@ -738,4 +738,549 @@ export const diagnosticsTools = [
       }
     },
   },
+  {
+    name: "get_xcode_logs",
+    description: "Get Xcode build logs, crash logs, and simulator logs for iOS/macOS development",
+    inputSchema: {
+      type: "object",
+      properties: {
+        logType: {
+          type: "string",
+          enum: ["build", "simulator", "crash", "device", "all"],
+          description: "Type of Xcode logs to retrieve",
+          default: "all",
+        },
+        lines: {
+          type: "number",
+          description: "Number of recent log lines to retrieve",
+          default: 100,
+        },
+        filter: {
+          type: "string",
+          description: "Filter logs by keyword or pattern",
+        },
+      },
+    },
+    handler: async (args: any) => {
+      try {
+        const logs: any = {
+          logType: args.logType || "all",
+          entries: [],
+        };
+
+        // Build logs - check DerivedData
+        if (args.logType === "build" || args.logType === "all") {
+          try {
+            const derivedDataPath = `${process.env.HOME}/Library/Developer/Xcode/DerivedData`;
+            const { stdout } = await execAsync(
+              `find "${derivedDataPath}" -name "*.xcactivitylog" -type f -mtime -1 | head -5`
+            );
+            
+            if (stdout.trim()) {
+              const logFiles = stdout.trim().split("\n");
+              for (const logFile of logFiles) {
+                try {
+                  // Use xcactivitylog to parse binary logs
+                  const { stdout: content } = await execAsync(
+                    `strings "${logFile}" | tail -${args.lines}`
+                  );
+                  if (content) {
+                    logs.entries.push({
+                      type: "build",
+                      file: logFile.replace(derivedDataPath, "~/Library/Developer/Xcode/DerivedData"),
+                      content: content.split("\n").filter(line => 
+                        !args.filter || line.toLowerCase().includes(args.filter.toLowerCase())
+                      ),
+                    });
+                  }
+                } catch (e) {
+                  // Skip if can't read log
+                }
+              }
+            }
+          } catch (e) {
+            logs.entries.push({
+              type: "build",
+              note: "No recent build logs found or Xcode not installed",
+            });
+          }
+        }
+
+        // Simulator logs
+        if (args.logType === "simulator" || args.logType === "all") {
+          try {
+            const { stdout } = await execAsync(
+              `xcrun simctl spawn booted log stream --level debug --style compact 2>&1 | head -${args.lines}`,
+              { timeout: 2000 }
+            );
+            
+            if (stdout) {
+              const filteredLines = stdout.split("\n").filter(line => 
+                !args.filter || line.toLowerCase().includes(args.filter.toLowerCase())
+              );
+              
+              if (filteredLines.length > 0) {
+                logs.entries.push({
+                  type: "simulator",
+                  content: filteredLines,
+                });
+              }
+            }
+          } catch (e: any) {
+            logs.entries.push({
+              type: "simulator",
+              note: "No simulator running or not accessible",
+            });
+          }
+        }
+
+        // Crash logs
+        if (args.logType === "crash" || args.logType === "all") {
+          try {
+            const crashLogsPath = `${process.env.HOME}/Library/Logs/DiagnosticReports`;
+            const { stdout } = await execAsync(
+              `find "${crashLogsPath}" -name "*.crash" -o -name "*.ips" | sort -r | head -5`
+            );
+            
+            if (stdout.trim()) {
+              const crashFiles = stdout.trim().split("\n");
+              for (const crashFile of crashFiles.slice(0, 3)) {
+                try {
+                  const content = await fs.readFile(crashFile, "utf-8");
+                  const lines = content.split("\n").slice(0, args.lines);
+                  const filteredLines = lines.filter(line => 
+                    !args.filter || line.toLowerCase().includes(args.filter.toLowerCase())
+                  );
+                  
+                  logs.entries.push({
+                    type: "crash",
+                    file: crashFile.replace(process.env.HOME!, "~"),
+                    content: filteredLines,
+                  });
+                } catch (e) {
+                  // Skip if can't read crash log
+                }
+              }
+            }
+          } catch (e) {
+            logs.entries.push({
+              type: "crash",
+              note: "No crash logs found",
+            });
+          }
+        }
+
+        // Device logs (requires connected device)
+        if (args.logType === "device" || args.logType === "all") {
+          try {
+            const { stdout } = await execAsync(
+              `idevicesyslog --no-colors 2>&1 | head -${args.lines}`,
+              { timeout: 3000 }
+            );
+            
+            if (stdout && !stdout.includes("No device found")) {
+              const filteredLines = stdout.split("\n").filter(line => 
+                !args.filter || line.toLowerCase().includes(args.filter.toLowerCase())
+              );
+              
+              logs.entries.push({
+                type: "device",
+                content: filteredLines,
+              });
+            }
+          } catch (e) {
+            logs.entries.push({
+              type: "device",
+              note: "No device connected or libimobiledevice not installed (brew install libimobiledevice)",
+            });
+          }
+        }
+
+        return formatToolResponse({
+          success: true,
+          ...logs,
+          totalEntries: logs.entries.length,
+        });
+      } catch (error: any) {
+        return formatToolResponse({
+          success: false,
+          error: error.message,
+        });
+      }
+    },
+  },
+  {
+    name: "get_android_logs",
+    description: "Get Android logcat logs, build logs, and device logs for Android development",
+    inputSchema: {
+      type: "object",
+      properties: {
+        logType: {
+          type: "string",
+          enum: ["logcat", "build", "gradle", "all"],
+          description: "Type of Android logs to retrieve",
+          default: "logcat",
+        },
+        priority: {
+          type: "string",
+          enum: ["V", "D", "I", "W", "E", "F", "all"],
+          description: "Logcat priority level (Verbose, Debug, Info, Warning, Error, Fatal)",
+          default: "all",
+        },
+        tag: {
+          type: "string",
+          description: "Filter logcat by tag",
+        },
+        lines: {
+          type: "number",
+          description: "Number of recent log lines to retrieve",
+          default: 100,
+        },
+      },
+    },
+    handler: async (args: any) => {
+      try {
+        const logs: any = {
+          logType: args.logType || "logcat",
+          entries: [],
+        };
+
+        // Logcat - live device/emulator logs
+        if (args.logType === "logcat" || args.logType === "all") {
+          try {
+            // Check if adb is available
+            await execAsync("which adb");
+            
+            let logcatCmd = "adb logcat -d";
+            
+            // Add priority filter
+            if (args.priority && args.priority !== "all") {
+              logcatCmd += ` *:${args.priority}`;
+            }
+            
+            // Add tag filter
+            if (args.tag) {
+              logcatCmd += ` -s ${args.tag}`;
+            }
+            
+            logcatCmd += ` | tail -${args.lines}`;
+            
+            const { stdout } = await execAsync(logcatCmd);
+            
+            if (stdout) {
+              const lines = stdout.split("\n").filter(line => line.trim());
+              const parsedLogs = lines.map(line => {
+                // Parse logcat format: timestamp PID-TID/package priority/tag: message
+                const match = line.match(/(\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+)\s+(\d+)\s+(\d+)\s+([VDIWEF])\s+(.+?):\s+(.+)/);
+                if (match) {
+                  return {
+                    timestamp: match[1],
+                    pid: match[2],
+                    tid: match[3],
+                    priority: match[4],
+                    tag: match[5],
+                    message: match[6],
+                  };
+                }
+                return { raw: line };
+              });
+              
+              logs.entries.push({
+                type: "logcat",
+                count: parsedLogs.length,
+                logs: parsedLogs,
+              });
+            }
+          } catch (e: any) {
+            logs.entries.push({
+              type: "logcat",
+              note: e.message.includes("not found") 
+                ? "adb not found - install Android SDK platform-tools"
+                : "No device/emulator connected or adb error",
+            });
+          }
+        }
+
+        // Gradle build logs
+        if (args.logType === "build" || args.logType === "gradle" || args.logType === "all") {
+          try {
+            // Check for recent Gradle build logs
+            const gradleLogsPath = `${workspacePath}/.gradle`;
+            const buildLogsPath = `${workspacePath}/build`;
+            
+            const logPaths = [
+              `${gradleLogsPath}/daemon/*/daemon-*.out.log`,
+              `${buildLogsPath}/outputs/logs/*.txt`,
+            ];
+            
+            for (const pattern of logPaths) {
+              try {
+                const files = await glob(pattern, { absolute: true });
+                const sortedFiles = files.sort((a, b) => {
+                  try {
+                    const statA = require("fs").statSync(a);
+                    const statB = require("fs").statSync(b);
+                    return statB.mtimeMs - statA.mtimeMs;
+                  } catch {
+                    return 0;
+                  }
+                });
+                
+                for (const file of sortedFiles.slice(0, 2)) {
+                  try {
+                    const content = await fs.readFile(file, "utf-8");
+                    const lines = content.split("\n").slice(-args.lines);
+                    
+                    logs.entries.push({
+                      type: "gradle",
+                      file: file.replace(workspacePath, "."),
+                      lines: lines.filter(l => l.trim()),
+                    });
+                  } catch (e) {
+                    // Skip if can't read
+                  }
+                }
+              } catch (e) {
+                // No logs found for this pattern
+              }
+            }
+            
+            if (logs.entries.filter((e: any) => e.type === "gradle").length === 0) {
+              logs.entries.push({
+                type: "gradle",
+                note: "No Gradle build logs found",
+              });
+            }
+          } catch (e: any) {
+            logs.entries.push({
+              type: "gradle",
+              note: "Error reading Gradle logs",
+            });
+          }
+        }
+
+        return formatToolResponse({
+          success: true,
+          ...logs,
+          totalEntries: logs.entries.length,
+        });
+      } catch (error: any) {
+        return formatToolResponse({
+          success: false,
+          error: error.message,
+        });
+      }
+    },
+  },
+  {
+    name: "get_flutter_logs",
+    description: "Get Flutter application logs and DevTools logs",
+    inputSchema: {
+      type: "object",
+      properties: {
+        lines: {
+          type: "number",
+          description: "Number of recent log lines to retrieve",
+          default: 100,
+        },
+        verbose: {
+          type: "boolean",
+          description: "Include verbose debugging information",
+          default: false,
+        },
+      },
+    },
+    handler: async (args: any) => {
+      try {
+        const logs: any = {
+          entries: [],
+        };
+
+        // Check if flutter is available
+        try {
+          await execAsync("which flutter");
+        } catch (e) {
+          return formatToolResponse({
+            success: false,
+            error: "Flutter not found - install Flutter SDK",
+          });
+        }
+
+        // Get flutter doctor output for diagnostics
+        try {
+          const { stdout } = await execAsync("flutter doctor");
+          logs.entries.push({
+            type: "doctor",
+            content: stdout.split("\n"),
+          });
+        } catch (e: any) {
+          logs.entries.push({
+            type: "doctor",
+            note: "Could not run flutter doctor",
+          });
+        }
+
+        // Try to get logs from running flutter app
+        try {
+          const verboseFlag = args.verbose ? "-v" : "";
+          const { stdout } = await execAsync(
+            `flutter logs ${verboseFlag} 2>&1 | head -${args.lines}`,
+            { timeout: 3000 }
+          );
+          
+          if (stdout) {
+            logs.entries.push({
+              type: "app",
+              content: stdout.split("\n").filter(line => line.trim()),
+            });
+          }
+        } catch (e: any) {
+          logs.entries.push({
+            type: "app",
+            note: "No Flutter app running or timed out",
+          });
+        }
+
+        return formatToolResponse({
+          success: true,
+          ...logs,
+          totalEntries: logs.entries.length,
+        });
+      } catch (error: any) {
+        return formatToolResponse({
+          success: false,
+          error: error.message,
+        });
+      }
+    },
+  },
+  {
+    name: "get_react_native_logs",
+    description: "Get React Native Metro bundler and application logs",
+    inputSchema: {
+      type: "object",
+      properties: {
+        logType: {
+          type: "string",
+          enum: ["metro", "ios", "android", "all"],
+          description: "Type of React Native logs to retrieve",
+          default: "all",
+        },
+        lines: {
+          type: "number",
+          description: "Number of recent log lines to retrieve",
+          default: 100,
+        },
+      },
+    },
+    handler: async (args: any) => {
+      try {
+        const logs: any = {
+          logType: args.logType || "all",
+          entries: [],
+        };
+
+        // Metro bundler logs
+        if (args.logType === "metro" || args.logType === "all") {
+          try {
+            // Check for Metro process
+            const { stdout } = await execAsync("pgrep -fl 'react-native.*start' || pgrep -fl 'metro'");
+            
+            if (stdout) {
+              logs.entries.push({
+                type: "metro",
+                note: "Metro bundler running",
+                processes: stdout.split("\n").filter(l => l.trim()),
+              });
+              
+              // Try to get Metro logs from common log locations
+              const metroLogPaths = [
+                `${workspacePath}/metro.log`,
+                `${workspacePath}/.metro/metro.log`,
+              ];
+              
+              for (const logPath of metroLogPaths) {
+                try {
+                  const content = await fs.readFile(logPath, "utf-8");
+                  const lines = content.split("\n").slice(-args.lines);
+                  logs.entries.push({
+                    type: "metro",
+                    file: logPath.replace(workspacePath, "."),
+                    content: lines.filter(l => l.trim()),
+                  });
+                  break;
+                } catch (e) {
+                  // Try next path
+                }
+              }
+            } else {
+              logs.entries.push({
+                type: "metro",
+                note: "Metro bundler not running",
+              });
+            }
+          } catch (e) {
+            logs.entries.push({
+              type: "metro",
+              note: "Metro bundler not running",
+            });
+          }
+        }
+
+        // iOS logs (if running on iOS)
+        if (args.logType === "ios" || args.logType === "all") {
+          try {
+            const { stdout } = await execAsync(
+              `xcrun simctl spawn booted log stream --predicate 'processImagePath contains "Runner"' --style compact 2>&1 | head -${args.lines}`,
+              { timeout: 2000 }
+            );
+            
+            if (stdout && !stdout.includes("error")) {
+              logs.entries.push({
+                type: "ios",
+                content: stdout.split("\n").filter(line => line.trim()),
+              });
+            }
+          } catch (e) {
+            logs.entries.push({
+              type: "ios",
+              note: "iOS simulator not running or app not launched",
+            });
+          }
+        }
+
+        // Android logs (if running on Android)
+        if (args.logType === "android" || args.logType === "all") {
+          try {
+            const { stdout } = await execAsync(
+              `adb logcat -d ReactNative:* ReactNativeJS:* *:S | tail -${args.lines}`
+            );
+            
+            if (stdout) {
+              logs.entries.push({
+                type: "android",
+                content: stdout.split("\n").filter(line => line.trim()),
+              });
+            }
+          } catch (e) {
+            logs.entries.push({
+              type: "android",
+              note: "Android device/emulator not connected or app not running",
+            });
+          }
+        }
+
+        return formatToolResponse({
+          success: true,
+          ...logs,
+          totalEntries: logs.entries.length,
+        });
+      } catch (error: any) {
+        return formatToolResponse({
+          success: false,
+          error: error.message,
+        });
+      }
+    },
+  },
 ];

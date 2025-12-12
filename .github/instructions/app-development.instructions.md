@@ -8,3 +8,4 @@ applyTo: '**'
 - Ensure that the app workds, that there are no linting errors, and that all tests pass before considering the application complete. If there are any issues during testing or linting, address them using your tools if possible without user intervention.
 - Use the MCP tools to validate the application as needed, including any static analysis, security checks, or performance profiling tools available. This should be done without user intervention where possible.
 - Follow best practices for the specific programming language and framework you are using, including naming conventions, file organization, and design patterns.
+- dont add emojis or any other non-standard characters to the code or documentation.
