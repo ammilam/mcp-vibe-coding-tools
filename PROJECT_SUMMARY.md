@@ -67,7 +67,7 @@ mcp-vibe-coding-tools/
 
 ## Technologies Used
 
-- **@modelcontextprotocol/sdk** (v1.0.4) - Official MCP SDK
+- **@modelcontextprotocol/sdk** (v1.24.3) - Official MCP SDK **⚠️ CRITICAL: Must match package.json**
 - **TypeScript** (v5.7.2) - Type-safe development
 - **Node.js** (18+) - Runtime environment
 - **simple-git** (v3.27.0) - Git operations
@@ -75,6 +75,21 @@ mcp-vibe-coding-tools/
 - **cheerio** (v1.0.0) - HTML parsing
 - **glob** (v11.0.0) - File pattern matching
 - **zod** (v3.24.1) - Schema validation
+
+### ⚠️ IMPORTANT: Preventing Version Mismatch Issues
+
+**The MCP SDK version in package.json MUST match the installed version.**
+
+If you see errors like `v3Schema.safeParseAsync is not a function`, it means there's a version mismatch.
+
+**To fix:**
+```bash
+npm list @modelcontextprotocol/sdk  # Check installed version
+npm install @modelcontextprotocol/sdk@latest  # Update to latest
+npm run build  # Rebuild the project
+```
+
+**Always update package.json to match the installed SDK version.**
 
 ## How It Works
 

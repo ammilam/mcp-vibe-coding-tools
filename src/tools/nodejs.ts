@@ -3,6 +3,7 @@ import { formatToolResponse } from "../utils/response.js";
 import { promisify } from "util";
 import * as fs from "fs/promises";
 import * as path from "path";
+import { z } from "zod";
 
 const execAsync = promisify(exec);
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
@@ -11,26 +12,11 @@ export const nodejsTools = [
   {
     name: "npm_install",
     description: "Install npm packages",
-    inputSchema: {
-      type: "object",
-      properties: {
-        packages: {
-          type: "array",
-          items: { type: "string" },
-          description: "Package names to install",
-        },
-        dev: {
-          type: "boolean",
-          description: "Install as dev dependencies",
-          default: false,
-        },
-        global: {
-          type: "boolean",
-          description: "Install globally",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      packages: z.array(z.string()).describe("Package names to install").optional(),
+      dev: z.boolean().describe("Install as dev dependencies").default(false).optional(),
+      global: z.boolean().describe("Install globally").default(false).optional(),
+    }),
     handler: async (args: any) => {
       let command = "npm install";
       
@@ -62,16 +48,9 @@ export const nodejsTools = [
   {
     name: "npm_run_script",
     description: "Run an npm script from package.json",
-    inputSchema: {
-      type: "object",
-      properties: {
-        script: {
-          type: "string",
-          description: "Script name to run",
-        },
-      },
-      required: ["script"],
-    },
+    inputSchema: z.object({
+      script: z.string().describe("Script name to run"),
+    }),
     handler: async (args: any) => {
       const { stdout, stderr } = await execAsync(`npm run ${args.script}`, {
         cwd: workspacePath,
@@ -90,10 +69,7 @@ export const nodejsTools = [
   {
     name: "npm_outdated",
     description: "Check for outdated packages",
-    inputSchema: {
-      type: "object",
-      properties: {},
-    },
+    inputSchema: z.object({}),
     handler: async () => {
       try {
         const { stdout } = await execAsync("npm outdated --json", {
@@ -134,24 +110,11 @@ export const nodejsTools = [
   {
     name: "npm_init",
     description: "Initialize a new npm project",
-    inputSchema: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-          description: "Project name",
-        },
-        version: {
-          type: "string",
-          description: "Initial version",
-          default: "1.0.0",
-        },
-        description: {
-          type: "string",
-          description: "Project description",
-        },
-      },
-    },
+    inputSchema: z.object({
+      name: z.string().describe("Project name").optional(),
+      version: z.string().describe("Initial version").default("1.0.0").optional(),
+      description: z.string().describe("Project description").optional(),
+    }),
     handler: async (args: any) => {
       const packageJson = {
         name: args.name || path.basename(workspacePath),
@@ -180,10 +143,7 @@ export const nodejsTools = [
   {
     name: "read_package_json",
     description: "Read and parse package.json",
-    inputSchema: {
-      type: "object",
-      properties: {},
-    },
+    inputSchema: z.object({}),
     handler: async () => {
       const packagePath = path.join(workspacePath, "package.json");
       const content = await fs.readFile(packagePath, "utf8");

@@ -1,6 +1,7 @@
 import { exec } from "child_process";
 import { formatToolResponse } from "../utils/response.js";
 import { promisify } from "util";
+import { z } from "zod";
 
 const execAsync = promisify(exec);
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
@@ -9,26 +10,11 @@ export const testTools = [
   {
     name: "run_tests",
     description: "Run test suite (automatically detects test framework)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        framework: {
-          type: "string",
-          enum: ["jest", "vitest", "pytest", "mocha", "auto"],
-          description: "Test framework to use (default: auto-detect)",
-          default: "auto",
-        },
-        pattern: {
-          type: "string",
-          description: "Test file pattern to run",
-        },
-        coverage: {
-          type: "boolean",
-          description: "Generate coverage report",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      framework: z.enum(["jest", "vitest", "pytest", "mocha", "auto"]).describe("Test framework to use (default: auto-detect)").default("auto").optional(),
+      pattern: z.string().describe("Test file pattern to run").optional(),
+      coverage: z.boolean().describe("Generate coverage report").default(false).optional(),
+    }),
     handler: async (args: any) => {
       let command: string;
       
@@ -114,16 +100,9 @@ export const testTools = [
   {
     name: "build_project",
     description: "Build the project",
-    inputSchema: {
-      type: "object",
-      properties: {
-        command: {
-          type: "string",
-          description: "Build command (default: npm run build)",
-          default: "npm run build",
-        },
-      },
-    },
+    inputSchema: z.object({
+      command: z.string().describe("Build command (default: npm run build)").default("npm run build").optional(),
+    }),
     handler: async (args: any) => {
       const command = args.command || "npm run build";
       
@@ -155,21 +134,10 @@ export const testTools = [
   {
     name: "start_dev_server",
     description: "Start development server",
-    inputSchema: {
-      type: "object",
-      properties: {
-        command: {
-          type: "string",
-          description: "Server command (default: npm run dev)",
-          default: "npm run dev",
-        },
-        background: {
-          type: "boolean",
-          description: "Run in background",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      command: z.string().describe("Server command (default: npm run dev)").default("npm run dev").optional(),
+      background: z.boolean().describe("Run in background").default(false).optional(),
+    }),
     handler: async (args: any) => {
       const command = args.command || "npm run dev";
       
@@ -206,16 +174,9 @@ export const testTools = [
   {
     name: "lint_code",
     description: "Run code linter",
-    inputSchema: {
-      type: "object",
-      properties: {
-        fix: {
-          type: "boolean",
-          description: "Automatically fix issues",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      fix: z.boolean().describe("Automatically fix issues").default(false).optional(),
+    }),
     handler: async (args: any) => {
       let command = "npm run lint";
       if (args.fix) {

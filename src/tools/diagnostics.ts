@@ -4,6 +4,7 @@ import { formatToolResponse } from "../utils/response.js";
 import { glob } from "glob";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { z } from "zod";
 
 const execAsync = promisify(exec);
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
@@ -12,21 +13,10 @@ export const diagnosticsTools = [
   {
     name: "get_vscode_problems",
     description: "Get compilation errors, linting issues, and other problems from VS Code diagnostics by running TypeScript and ESLint checks",
-    inputSchema: {
-      type: "object",
-      properties: {
-        filePath: {
-          type: "string",
-          description: "Optional file path to filter problems for specific file",
-        },
-        severity: {
-          type: "string",
-          enum: ["error", "warning", "info", "all"],
-          description: "Filter by severity level",
-          default: "all",
-        },
-      },
-    },
+    inputSchema: z.object({
+      filePath: z.string().describe("Optional file path to filter problems for specific file").optional(),
+      severity: z.enum(["error", "warning", "info", "all"]).describe("Filter by severity level").default("all").optional(),
+    }),
     handler: async (args: any) => {
       try {
         const problems: any[] = [];
@@ -139,30 +129,12 @@ export const diagnosticsTools = [
   {
     name: "read_log_file",
     description: "Read and parse log files with optional filtering and tail support",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logPath: {
-          type: "string",
-          description: "Path to log file (relative to workspace)",
-        },
-        lines: {
-          type: "number",
-          description: "Number of lines to read from end (tail -n)",
-          default: 100,
-        },
-        filter: {
-          type: "string",
-          description: "Filter logs by string/regex pattern",
-        },
-        level: {
-          type: "string",
-          enum: ["ERROR", "WARN", "INFO", "DEBUG", "TRACE"],
-          description: "Filter by log level",
-        },
-      },
-      required: ["logPath"],
-    },
+    inputSchema: z.object({
+      logPath: z.string().describe("Path to log file (relative to workspace)"),
+      lines: z.number().describe("Number of lines to read from end (tail -n)").default(100).optional(),
+      filter: z.string().describe("Filter logs by string/regex pattern").optional(),
+      level: z.enum(["ERROR", "WARN", "INFO", "DEBUG", "TRACE"]).describe("Filter by log level").optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logPath = path.join(workspacePath, args.logPath);
@@ -226,21 +198,10 @@ export const diagnosticsTools = [
   {
     name: "find_log_files",
     description: "Find all log files in the workspace",
-    inputSchema: {
-      type: "object",
-      properties: {
-        pattern: {
-          type: "string",
-          description: "Glob pattern for log files",
-          default: "**/*.log",
-        },
-        includeNodeModules: {
-          type: "boolean",
-          description: "Include logs in node_modules",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      pattern: z.string().describe("Glob pattern for log files").default("**/*.log").optional(),
+      includeNodeModules: z.boolean().describe("Include logs in node_modules").default(false).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const ignore = args.includeNodeModules
@@ -283,21 +244,10 @@ export const diagnosticsTools = [
   {
     name: "analyze_error_logs",
     description: "Analyze log files for errors, exceptions, and common issues",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logPath: {
-          type: "string",
-          description: "Path to log file to analyze",
-        },
-        extractStackTraces: {
-          type: "boolean",
-          description: "Extract and parse stack traces",
-          default: true,
-        },
-      },
-      required: ["logPath"],
-    },
+    inputSchema: z.object({
+      logPath: z.string().describe("Path to log file to analyze"),
+      extractStackTraces: z.boolean().describe("Extract and parse stack traces").default(true).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logPath = path.join(workspacePath, args.logPath);
@@ -401,26 +351,11 @@ export const diagnosticsTools = [
   {
     name: "watch_log_changes",
     description: "Get recent changes/additions to a log file (simulates tail -f)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logPath: {
-          type: "string",
-          description: "Path to log file",
-        },
-        lastReadPosition: {
-          type: "number",
-          description: "Last byte position read (for incremental reads)",
-          default: 0,
-        },
-        maxBytes: {
-          type: "number",
-          description: "Maximum bytes to read from current position",
-          default: 10240,
-        },
-      },
-      required: ["logPath"],
-    },
+    inputSchema: z.object({
+      logPath: z.string().describe("Path to log file"),
+      lastReadPosition: z.number().describe("Last byte position read (for incremental reads)").default(0).optional(),
+      maxBytes: z.number().describe("Maximum bytes to read from current position").default(10240).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logPath = path.join(workspacePath, args.logPath);
@@ -472,35 +407,14 @@ export const diagnosticsTools = [
   {
     name: "aggregate_logs",
     description: "Aggregate and analyze multiple log files together",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logPattern: {
-          type: "string",
-          description: "Glob pattern to match log files",
-          default: "**/*.log",
-        },
-        timeRange: {
-          type: "object",
-          properties: {
-            start: {
-              type: "string",
-              description: "Start time (ISO 8601)",
-            },
-            end: {
-              type: "string",
-              description: "End time (ISO 8601)",
-            },
-          },
-        },
-        groupBy: {
-          type: "string",
-          enum: ["level", "file", "hour", "day"],
-          description: "How to group log entries",
-          default: "level",
-        },
-      },
-    },
+    inputSchema: z.object({
+      logPattern: z.string().describe("Glob pattern to match log files").default("**/*.log").optional(),
+      timeRange: z.object({
+        start: z.string().describe("Start time (ISO 8601)").optional(),
+        end: z.string().describe("End time (ISO 8601)").optional(),
+      }).optional(),
+      groupBy: z.enum(["level", "file", "hour", "day"]).describe("How to group log entries").default("level").optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logFiles = await glob(args.logPattern || "**/*.log", {
@@ -571,20 +485,10 @@ export const diagnosticsTools = [
   {
     name: "get_terminal_history",
     description: "Get recent terminal command history from shell (zsh/bash)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        lines: {
-          type: "number",
-          description: "Number of recent commands to retrieve",
-          default: 20,
-        },
-        filter: {
-          type: "string",
-          description: "Optional filter pattern for commands",
-        },
-      },
-    },
+    inputSchema: z.object({
+      lines: z.number().describe("Number of recent commands to retrieve").default(20).optional(),
+      filter: z.string().describe("Optional filter pattern for commands").optional(),
+    }),
     handler: async (args: any) => {
       try {
         // Try to read shell history
@@ -648,31 +552,12 @@ export const diagnosticsTools = [
   {
     name: "search_logs",
     description: "Search through all log files in workspace for specific patterns with context",
-    inputSchema: {
-      type: "object",
-      properties: {
-        pattern: {
-          type: "string",
-          description: "Search pattern (supports regex)",
-        },
-        logDir: {
-          type: "string",
-          description: "Directory to search for logs (default: workspace root)",
-          default: ".",
-        },
-        filePattern: {
-          type: "string",
-          description: "File pattern for log files (default: *.log)",
-          default: "*.log",
-        },
-        contextLines: {
-          type: "number",
-          description: "Number of context lines before/after match",
-          default: 2,
-        },
-      },
-      required: ["pattern"],
-    },
+    inputSchema: z.object({
+      pattern: z.string().describe("Search pattern (supports regex)"),
+      logDir: z.string().describe("Directory to search for logs (default: workspace root)").default(".").optional(),
+      filePattern: z.string().describe("File pattern for log files (default: *.log)").default("*.log").optional(),
+      contextLines: z.number().describe("Number of context lines before/after match").default(2).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const searchDir = path.join(workspacePath, args.logDir || ".");
@@ -741,26 +626,11 @@ export const diagnosticsTools = [
   {
     name: "get_xcode_logs",
     description: "Get Xcode build logs, crash logs, and simulator logs for iOS/macOS development",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logType: {
-          type: "string",
-          enum: ["build", "simulator", "crash", "device", "all"],
-          description: "Type of Xcode logs to retrieve",
-          default: "all",
-        },
-        lines: {
-          type: "number",
-          description: "Number of recent log lines to retrieve",
-          default: 100,
-        },
-        filter: {
-          type: "string",
-          description: "Filter logs by keyword or pattern",
-        },
-      },
-    },
+    inputSchema: z.object({
+      logType: z.enum(["build", "simulator", "crash", "device", "all"]).describe("Type of Xcode logs to retrieve").default("all").optional(),
+      lines: z.number().describe("Number of recent log lines to retrieve").default(100).optional(),
+      filter: z.string().describe("Filter logs by keyword or pattern").optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logs: any = {
@@ -912,32 +782,12 @@ export const diagnosticsTools = [
   {
     name: "get_android_logs",
     description: "Get Android logcat logs, build logs, and device logs for Android development",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logType: {
-          type: "string",
-          enum: ["logcat", "build", "gradle", "all"],
-          description: "Type of Android logs to retrieve",
-          default: "logcat",
-        },
-        priority: {
-          type: "string",
-          enum: ["V", "D", "I", "W", "E", "F", "all"],
-          description: "Logcat priority level (Verbose, Debug, Info, Warning, Error, Fatal)",
-          default: "all",
-        },
-        tag: {
-          type: "string",
-          description: "Filter logcat by tag",
-        },
-        lines: {
-          type: "number",
-          description: "Number of recent log lines to retrieve",
-          default: 100,
-        },
-      },
-    },
+    inputSchema: z.object({
+      logType: z.enum(["logcat", "build", "gradle", "all"]).describe("Type of Android logs to retrieve").default("logcat").optional(),
+      priority: z.enum(["V", "D", "I", "W", "E", "F", "all"]).describe("Logcat priority level (Verbose, Debug, Info, Warning, Error, Fatal)").default("all").optional(),
+      tag: z.string().describe("Filter logcat by tag").optional(),
+      lines: z.number().describe("Number of recent log lines to retrieve").default(100).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logs: any = {
@@ -1075,21 +925,10 @@ export const diagnosticsTools = [
   {
     name: "get_flutter_logs",
     description: "Get Flutter application logs and DevTools logs",
-    inputSchema: {
-      type: "object",
-      properties: {
-        lines: {
-          type: "number",
-          description: "Number of recent log lines to retrieve",
-          default: 100,
-        },
-        verbose: {
-          type: "boolean",
-          description: "Include verbose debugging information",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      lines: z.number().describe("Number of recent log lines to retrieve").default(100).optional(),
+      verbose: z.boolean().describe("Include verbose debugging information").default(false).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logs: any = {
@@ -1157,22 +996,10 @@ export const diagnosticsTools = [
   {
     name: "get_react_native_logs",
     description: "Get React Native Metro bundler and application logs",
-    inputSchema: {
-      type: "object",
-      properties: {
-        logType: {
-          type: "string",
-          enum: ["metro", "ios", "android", "all"],
-          description: "Type of React Native logs to retrieve",
-          default: "all",
-        },
-        lines: {
-          type: "number",
-          description: "Number of recent log lines to retrieve",
-          default: 100,
-        },
-      },
-    },
+    inputSchema: z.object({
+      logType: z.enum(["metro", "ios", "android", "all"]).describe("Type of React Native logs to retrieve").default("all").optional(),
+      lines: z.number().describe("Number of recent log lines to retrieve").default(100).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const logs: any = {

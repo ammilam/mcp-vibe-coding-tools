@@ -1,6 +1,7 @@
 import { simpleGit, SimpleGit } from "simple-git";
 import * as path from "path";
 import { formatToolResponse } from "../utils/response.js";
+import { z } from "zod";
 
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
 const git: SimpleGit = simpleGit(workspacePath);
@@ -9,10 +10,7 @@ export const gitTools = [
   {
     name: "git_status",
     description: "Get the current git repository status",
-    inputSchema: {
-      type: "object",
-      properties: {},
-    },
+    inputSchema: z.object({}),
     handler: async () => {
       const status = await git.status();
       return formatToolResponse({
@@ -33,20 +31,10 @@ export const gitTools = [
   {
     name: "git_log",
     description: "Get git commit history",
-    inputSchema: {
-      type: "object",
-      properties: {
-        maxCount: {
-          type: "number",
-          description: "Maximum number of commits to retrieve (default: 10)",
-          default: 10,
-        },
-        file: {
-          type: "string",
-          description: "Filter commits by file path",
-        },
-      },
-    },
+    inputSchema: z.object({
+      maxCount: z.number().describe("Maximum number of commits to retrieve (default: 10)").default(10).optional(),
+      file: z.string().describe("Filter commits by file path").optional(),
+    }),
     handler: async (args: any) => {
       const options: any = {
         maxCount: args.maxCount || 10,
@@ -74,20 +62,10 @@ export const gitTools = [
   {
     name: "git_diff",
     description: "Show differences in files",
-    inputSchema: {
-      type: "object",
-      properties: {
-        file: {
-          type: "string",
-          description: "Specific file to diff (or all if not specified)",
-        },
-        staged: {
-          type: "boolean",
-          description: "Show staged changes (--cached)",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      file: z.string().describe("Specific file to diff (or all if not specified)").optional(),
+      staged: z.boolean().describe("Show staged changes (--cached)").default(false).optional(),
+    }),
     handler: async (args: any) => {
       const options = args.staged ? ["--cached"] : [];
       if (args.file) {
@@ -105,21 +83,10 @@ export const gitTools = [
   {
     name: "git_branch",
     description: "List, create, or switch branches",
-    inputSchema: {
-      type: "object",
-      properties: {
-        action: {
-          type: "string",
-          enum: ["list", "create", "switch", "delete"],
-          description: "Action to perform",
-        },
-        name: {
-          type: "string",
-          description: "Branch name (for create/switch/delete)",
-        },
-      },
-      required: ["action"],
-    },
+    inputSchema: z.object({
+      action: z.enum(["list", "create", "switch", "delete"]).describe("Action to perform"),
+      name: z.string().describe("Branch name (for create/switch/delete)").optional(),
+    }),
     handler: async (args: any) => {
       switch (args.action) {
         case "list": {
@@ -169,21 +136,10 @@ export const gitTools = [
   {
     name: "git_commit",
     description: "Create a git commit",
-    inputSchema: {
-      type: "object",
-      properties: {
-        message: {
-          type: "string",
-          description: "Commit message",
-        },
-        files: {
-          type: "array",
-          items: { type: "string" },
-          description: "Files to add (or all if not specified)",
-        },
-      },
-      required: ["message"],
-    },
+    inputSchema: z.object({
+      message: z.string().describe("Commit message"),
+      files: z.array(z.string()).describe("Files to add (or all if not specified)").optional(),
+    }),
     handler: async (args: any) => {
       if (args.files && args.files.length > 0) {
         await git.add(args.files);
@@ -203,20 +159,10 @@ export const gitTools = [
   {
     name: "git_push",
     description: "Push commits to remote repository",
-    inputSchema: {
-      type: "object",
-      properties: {
-        remote: {
-          type: "string",
-          description: "Remote name (default: origin)",
-          default: "origin",
-        },
-        branch: {
-          type: "string",
-          description: "Branch to push (default: current)",
-        },
-      },
-    },
+    inputSchema: z.object({
+      remote: z.string().describe("Remote name (default: origin)").default("origin").optional(),
+      branch: z.string().describe("Branch to push (default: current)").optional(),
+    }),
     handler: async (args: any) => {
       const remote = args.remote || "origin";
       const branch = args.branch || (await git.branch()).current;
@@ -233,20 +179,10 @@ export const gitTools = [
   {
     name: "git_pull",
     description: "Pull changes from remote repository",
-    inputSchema: {
-      type: "object",
-      properties: {
-        remote: {
-          type: "string",
-          description: "Remote name (default: origin)",
-          default: "origin",
-        },
-        branch: {
-          type: "string",
-          description: "Branch to pull (default: current)",
-        },
-      },
-    },
+    inputSchema: z.object({
+      remote: z.string().describe("Remote name (default: origin)").default("origin").optional(),
+      branch: z.string().describe("Branch to pull (default: current)").optional(),
+    }),
     handler: async (args: any) => {
       const remote = args.remote || "origin";
       const branch = args.branch || (await git.branch()).current;
@@ -264,20 +200,10 @@ export const gitTools = [
   {
     name: "git_clone",
     description: "Clone a git repository",
-    inputSchema: {
-      type: "object",
-      properties: {
-        url: {
-          type: "string",
-          description: "Repository URL to clone",
-        },
-        directory: {
-          type: "string",
-          description: "Target directory name",
-        },
-      },
-      required: ["url"],
-    },
+    inputSchema: z.object({
+      url: z.string().describe("Repository URL to clone"),
+      directory: z.string().describe("Target directory name").optional(),
+    }),
     handler: async (args: any) => {
       const targetPath = args.directory 
         ? path.join(workspacePath, args.directory)
@@ -295,21 +221,10 @@ export const gitTools = [
   {
     name: "git_stash",
     description: "Stash or apply stashed changes",
-    inputSchema: {
-      type: "object",
-      properties: {
-        action: {
-          type: "string",
-          enum: ["save", "pop", "list"],
-          description: "Stash action to perform",
-        },
-        message: {
-          type: "string",
-          description: "Stash message (for save)",
-        },
-      },
-      required: ["action"],
-    },
+    inputSchema: z.object({
+      action: z.enum(["save", "pop", "list"]).describe("Stash action to perform"),
+      message: z.string().describe("Stash message (for save)").optional(),
+    }),
     handler: async (args: any) => {
       switch (args.action) {
         case "save": {

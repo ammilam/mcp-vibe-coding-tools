@@ -44,7 +44,7 @@ for (const tool of allTools) {
     tool.name,
     {
       description: tool.description,
-      inputSchema: tool.inputSchema as any,
+      inputSchema: tool.inputSchema,
     },
     tool.handler
   );

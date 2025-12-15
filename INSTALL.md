@@ -7,6 +7,23 @@
 - Git (for git operations)
 - Python 3 (for Python tools, optional)
 
+## ⚠️ CRITICAL: MCP SDK Version
+
+**This project requires `@modelcontextprotocol/sdk@^1.24.3` or higher.**
+
+**Common Issue:** If you see `v3Schema.safeParseAsync is not a function`, there's a version mismatch.
+
+**Solution:**
+```bash
+cd mcp-vibe-coding-tools
+npm list @modelcontextprotocol/sdk  # Check version
+# If version doesn't match package.json:
+npm install  # Reinstall dependencies
+npm run build  # Rebuild
+```
+
+**Always verify package.json version matches installed version before deploying.**
+
 ## Installation Methods
 
 ### Method 1: Global Installation (Recommended)

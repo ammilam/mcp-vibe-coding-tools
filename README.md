@@ -46,6 +46,23 @@ This MCP server operates as a **complete software development company in a box**
 - **Iterative fixing** - Debug and resolve automatically
 - **Production quality** - Ship only fully validated code
 
+## ⚠️ Critical: SDK Version Compatibility
+
+**ALWAYS ensure package.json matches the installed MCP SDK version!**
+
+This project uses `@modelcontextprotocol/sdk@^1.24.3` with the modern `McpServer` API.
+
+**If you see `v3Schema.safeParseAsync is not a function`:**
+
+This is usually a **client cache issue**, not a server issue. See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for full fix.
+
+**Quick fix:**
+1. Clean rebuild: `rm -rf dist node_modules && npm install && npm run build`
+2. **Completely quit and restart your MCP client** (Claude Desktop, Cursor, etc.)
+3. Clear client cache if needed (see troubleshooting guide)
+
+Version mismatches between package.json and node_modules will break the server.
+
 ## 📦 100+ Production-Ready Tools Across 14 Categories
 
 ### Filesystem Operations (6 tools)

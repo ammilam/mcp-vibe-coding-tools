@@ -3,6 +3,7 @@ import { formatToolResponse } from "../utils/response.js";
 import { promisify } from "util";
 import * as fs from "fs/promises";
 import * as path from "path";
+import { z } from "zod";
 
 const execAsync = promisify(exec);
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
@@ -11,16 +12,9 @@ export const pythonTools = [
   {
     name: "python_create_venv",
     description: "Create a Python virtual environment",
-    inputSchema: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-          description: "Virtual environment name",
-          default: "venv",
-        },
-      },
-    },
+    inputSchema: z.object({
+      name: z.string().describe("Virtual environment name").default("venv").optional(),
+    }),
     handler: async (args: any) => {
       const venvName = args.name || "venv";
       const { stdout, stderr } = await execAsync(`python3 -m venv ${venvName}`, {
@@ -40,25 +34,11 @@ export const pythonTools = [
   {
     name: "pip_install",
     description: "Install Python packages using pip",
-    inputSchema: {
-      type: "object",
-      properties: {
-        packages: {
-          type: "array",
-          items: { type: "string" },
-          description: "Package names to install",
-        },
-        requirements: {
-          type: "string",
-          description: "Path to requirements.txt file",
-        },
-        venv: {
-          type: "string",
-          description: "Virtual environment to use",
-          default: "venv",
-        },
-      },
-    },
+    inputSchema: z.object({
+      packages: z.array(z.string()).describe("Package names to install").optional(),
+      requirements: z.string().describe("Path to requirements.txt file").optional(),
+      venv: z.string().describe("Virtual environment to use").default("venv").optional(),
+    }),
     handler: async (args: any) => {
       const venvName = args.venv || "venv";
       const pipPath = process.platform === "win32"
@@ -93,21 +73,10 @@ export const pythonTools = [
   {
     name: "pip_freeze",
     description: "Generate requirements.txt from installed packages",
-    inputSchema: {
-      type: "object",
-      properties: {
-        venv: {
-          type: "string",
-          description: "Virtual environment to use",
-          default: "venv",
-        },
-        output: {
-          type: "string",
-          description: "Output file path",
-          default: "requirements.txt",
-        },
-      },
-    },
+    inputSchema: z.object({
+      venv: z.string().describe("Virtual environment to use").default("venv").optional(),
+      output: z.string().describe("Output file path").default("requirements.txt").optional(),
+    }),
     handler: async (args: any) => {
       const venvName = args.venv || "venv";
       const pipPath = process.platform === "win32"
@@ -132,25 +101,11 @@ export const pythonTools = [
   {
     name: "python_run_script",
     description: "Run a Python script",
-    inputSchema: {
-      type: "object",
-      properties: {
-        script: {
-          type: "string",
-          description: "Path to Python script",
-        },
-        args: {
-          type: "array",
-          items: { type: "string" },
-          description: "Arguments to pass to the script",
-        },
-        venv: {
-          type: "string",
-          description: "Virtual environment to use",
-        },
-      },
-      required: ["script"],
-    },
+    inputSchema: z.object({
+      script: z.string().describe("Path to Python script"),
+      args: z.array(z.string()).describe("Arguments to pass to the script").optional(),
+      venv: z.string().describe("Virtual environment to use").optional(),
+    }),
     handler: async (args: any) => {
       let pythonPath = "python3";
       
@@ -180,15 +135,9 @@ export const pythonTools = [
   {
     name: "python_version",
     description: "Get Python version information",
-    inputSchema: {
-      type: "object",
-      properties: {
-        venv: {
-          type: "string",
-          description: "Virtual environment to check",
-        },
-      },
-    },
+    inputSchema: z.object({
+      venv: z.string().describe("Virtual environment to check").optional(),
+    }),
     handler: async (args: any) => {
       let pythonPath = "python3";
       

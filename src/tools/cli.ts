@@ -1,6 +1,7 @@
 import { exec } from "child_process";
 import { formatToolResponse } from "../utils/response.js";
 import { promisify } from "util";
+import { z } from "zod";
 
 const execAsync = promisify(exec);
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
@@ -9,26 +10,11 @@ export const cliTools = [
   {
     name: "execute_command",
     description: "Execute a shell command in the workspace directory",
-    inputSchema: {
-      type: "object",
-      properties: {
-        command: {
-          type: "string",
-          description: "The command to execute",
-        },
-        cwd: {
-          type: "string",
-          description: "Working directory (relative to workspace)",
-          default: ".",
-        },
-        timeout: {
-          type: "number",
-          description: "Timeout in milliseconds (default: 30000)",
-          default: 30000,
-        },
-      },
-      required: ["command"],
-    },
+    inputSchema: z.object({
+      command: z.string().describe("The command to execute"),
+      cwd: z.string().describe("Working directory (relative to workspace)").default(".").optional(),
+      timeout: z.number().describe("Timeout in milliseconds (default: 30000)").default(30000).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const { stdout, stderr } = await execAsync(args.command, {
@@ -65,15 +51,9 @@ export const cliTools = [
   {
     name: "get_environment",
     description: "Get environment variables",
-    inputSchema: {
-      type: "object",
-      properties: {
-        variable: {
-          type: "string",
-          description: "Specific variable to get (or all if not specified)",
-        },
-      },
-    },
+    inputSchema: z.object({
+      variable: z.string().describe("Specific variable to get (or all if not specified)").optional(),
+    }),
     handler: async (args: any) => {
       if (args.variable) {
         const result = {
@@ -98,16 +78,9 @@ export const cliTools = [
   {
     name: "which_command",
     description: "Find the path to an executable command",
-    inputSchema: {
-      type: "object",
-      properties: {
-        command: {
-          type: "string",
-          description: "The command to locate",
-        },
-      },
-      required: ["command"],
-    },
+    inputSchema: z.object({
+      command: z.string().describe("The command to locate"),
+    }),
     handler: async (args: any) => {
       try {
         const { stdout } = await execAsync(

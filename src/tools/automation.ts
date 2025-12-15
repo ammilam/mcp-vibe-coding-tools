@@ -3,6 +3,7 @@ import { promisify } from "util";
 import * as fs from "fs/promises";
 import * as path from "path";
 import { formatToolResponse } from "../utils/response.js";
+import { z } from "zod";
 
 const execAsync = promisify(exec);
 const workspacePath = process.env.WORKSPACE_PATH || process.cwd();
@@ -11,26 +12,11 @@ export const automationTools = [
   {
     name: "validate_project",
     description: "Run complete project validation (lint, type-check, test, build)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        skipTests: {
-          type: "boolean",
-          description: "Skip running tests",
-          default: false,
-        },
-        skipBuild: {
-          type: "boolean",
-          description: "Skip build step",
-          default: false,
-        },
-        fix: {
-          type: "boolean",
-          description: "Auto-fix linting issues",
-          default: true,
-        },
-      },
-    },
+    inputSchema: z.object({
+      skipTests: z.boolean().describe("Skip running tests").default(false).optional(),
+      skipBuild: z.boolean().describe("Skip build step").default(false).optional(),
+      fix: z.boolean().describe("Auto-fix linting issues").default(true).optional(),
+    }),
     handler: async (args: any) => {
       const results = {
         success: true,
@@ -286,21 +272,10 @@ export const automationTools = [
     name: "create_validation_script",
     description:
       "Create or update validation scripts in package.json for automated checks",
-    inputSchema: {
-      type: "object",
-      properties: {
-        includeCoverage: {
-          type: "boolean",
-          description: "Include coverage threshold checks",
-          default: true,
-        },
-        includePrecommit: {
-          type: "boolean",
-          description: "Add pre-commit hooks",
-          default: true,
-        },
-      },
-    },
+    inputSchema: z.object({
+      includeCoverage: z.boolean().describe("Include coverage threshold checks").default(true).optional(),
+      includePrecommit: z.boolean().describe("Add pre-commit hooks").default(true).optional(),
+    }),
     handler: async (args: any) => {
       try {
         const packageJsonPath = path.join(workspacePath, "package.json");
@@ -354,27 +329,11 @@ export const automationTools = [
     name: "setup_project_automation",
     description:
       "Set up complete project automation including CI/CD, pre-commit hooks, and validation",
-    inputSchema: {
-      type: "object",
-      properties: {
-        ci: {
-          type: "string",
-          enum: ["github-actions", "gitlab-ci", "none"],
-          description: "CI/CD platform to set up",
-          default: "github-actions",
-        },
-        includePreCommit: {
-          type: "boolean",
-          description: "Set up pre-commit hooks",
-          default: true,
-        },
-        includeDependabot: {
-          type: "boolean",
-          description: "Set up Dependabot for dependency updates",
-          default: true,
-        },
-      },
-    },
+    inputSchema: z.object({
+      ci: z.enum(["github-actions", "gitlab-ci", "none"]).describe("CI/CD platform to set up").default("github-actions").optional(),
+      includePreCommit: z.boolean().describe("Set up pre-commit hooks").default(true).optional(),
+      includeDependabot: z.boolean().describe("Set up Dependabot for dependency updates").default(true).optional(),
+    }),
     handler: async (args: any) => {
       const created = [];
 
@@ -537,21 +496,10 @@ ci: install validate ## Run CI pipeline locally
     name: "generate_project_docs",
     description:
       "Automatically generate comprehensive project documentation",
-    inputSchema: {
-      type: "object",
-      properties: {
-        includeApi: {
-          type: "boolean",
-          description: "Generate API documentation",
-          default: true,
-        },
-        includeArchitecture: {
-          type: "boolean",
-          description: "Generate architecture documentation",
-          default: true,
-        },
-      },
-    },
+    inputSchema: z.object({
+      includeApi: z.boolean().describe("Generate API documentation").default(true).optional(),
+      includeArchitecture: z.boolean().describe("Generate architecture documentation").default(true).optional(),
+    }),
     handler: async (args: any) => {
       const docsCreated = [];
 
@@ -688,16 +636,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     name: "fix_common_issues",
     description:
       "Automatically detect and fix common project issues (missing scripts, outdated deps, etc.)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        autoFix: {
-          type: "boolean",
-          description: "Automatically fix issues without confirmation",
-          default: true,
-        },
-      },
-    },
+    inputSchema: z.object({
+      autoFix: z.boolean().describe("Automatically fix issues without confirmation").default(true).optional(),
+    }),
     handler: async (args: any) => {
       const issues = [];
       const fixes = [];

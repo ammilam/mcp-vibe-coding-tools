@@ -19,21 +19,10 @@ export const filesystemTools = [
   {
     name: "read_file",
     description: "Read the contents of a file",
-    inputSchema: {
-      type: "object",
-      properties: {
-        path: {
-          type: "string",
-          description: "Path to the file relative to workspace",
-        },
-        encoding: {
-          type: "string",
-          description: "File encoding (default: utf8)",
-          default: "utf8",
-        },
-      },
-      required: ["path"],
-    },
+    inputSchema: z.object({
+      path: z.string().describe("Path to the file relative to workspace"),
+      encoding: z.string().describe("File encoding (default: utf8)").default("utf8").optional(),
+    }),
     handler: async (args: any) => {
       const validPath = validatePath(args.path);
       const content = await fs.readFile(validPath, args.encoding || "utf8");
@@ -49,25 +38,11 @@ export const filesystemTools = [
   {
     name: "write_file",
     description: "Write content to a file (creates or overwrites)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        path: {
-          type: "string",
-          description: "Path to the file relative to workspace",
-        },
-        content: {
-          type: "string",
-          description: "Content to write to the file",
-        },
-        encoding: {
-          type: "string",
-          description: "File encoding (default: utf8)",
-          default: "utf8",
-        },
-      },
-      required: ["path", "content"],
-    },
+    inputSchema: z.object({
+      path: z.string().describe("Path to the file relative to workspace"),
+      content: z.string().describe("Content to write to the file"),
+      encoding: z.string().describe("File encoding (default: utf8)").default("utf8").optional(),
+    }),
     handler: async (args: any) => {
       const validPath = validatePath(args.path);
       await fs.mkdir(path.dirname(validPath), { recursive: true });
@@ -90,21 +65,10 @@ export const filesystemTools = [
   {
     name: "list_directory",
     description: "List contents of a directory",
-    inputSchema: {
-      type: "object",
-      properties: {
-        path: {
-          type: "string",
-          description: "Path to the directory relative to workspace (default: .)",
-          default: ".",
-        },
-        recursive: {
-          type: "boolean",
-          description: "List subdirectories recursively",
-          default: false,
-        },
-      },
-    },
+    inputSchema: z.object({
+      path: z.string().describe("Path to the directory relative to workspace (default: .)").default(".").optional(),
+      recursive: z.boolean().describe("List subdirectories recursively").default(false).optional(),
+    }),
     handler: async (args: any) => {
       const validPath = validatePath(args.path || ".");
       const entries = await fs.readdir(validPath, { withFileTypes: true });
@@ -156,22 +120,10 @@ export const filesystemTools = [
   {
     name: "search_files",
     description: "Search for files using glob patterns",
-    inputSchema: {
-      type: "object",
-      properties: {
-        pattern: {
-          type: "string",
-          description: "Glob pattern to search for (e.g., '**/*.ts')",
-        },
-        ignore: {
-          type: "array",
-          items: { type: "string" },
-          description: "Patterns to ignore",
-          default: ["node_modules/**", ".git/**"],
-        },
-      },
-      required: ["pattern"],
-    },
+    inputSchema: z.object({
+      pattern: z.string().describe("Glob pattern to search for (e.g., '**/*.ts')"),
+      ignore: z.array(z.string()).describe("Patterns to ignore").default(["node_modules/**", ".git/**"]).optional(),
+    }),
     handler: async (args: any) => {
       const files = await glob(args.pattern, {
         cwd: workspacePath,
@@ -197,16 +149,9 @@ export const filesystemTools = [
   {
     name: "file_info",
     description: "Get detailed information about a file or directory",
-    inputSchema: {
-      type: "object",
-      properties: {
-        path: {
-          type: "string",
-          description: "Path to the file or directory",
-        },
-      },
-      required: ["path"],
-    },
+    inputSchema: z.object({
+      path: z.string().describe("Path to the file or directory"),
+    }),
     handler: async (args: any) => {
       const validPath = validatePath(args.path);
       const stats = await fs.stat(validPath);
@@ -234,16 +179,9 @@ export const filesystemTools = [
   {
     name: "create_directory",
     description: "Create a new directory (and parent directories if needed)",
-    inputSchema: {
-      type: "object",
-      properties: {
-        path: {
-          type: "string",
-          description: "Path to the directory to create",
-        },
-      },
-      required: ["path"],
-    },
+    inputSchema: z.object({
+      path: z.string().describe("Path to the directory to create"),
+    }),
     handler: async (args: any) => {
       const validPath = validatePath(args.path);
       await fs.mkdir(validPath, { recursive: true });
