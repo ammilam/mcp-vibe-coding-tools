@@ -496,95 +496,6 @@ export const gitlab_get_merge_request = {
   },
 };
 
-export const gitlab_create_merge_request = {
-  name: "gitlab_create_merge_request",
-  description: "Create a new merge request in a GitLab project",
-  inputSchema: z.object({
-    project_id: z.string().describe("Project ID or URL-encoded project path"),
-    source_branch: z.string().describe("Source branch name"),
-    target_branch: z.string().describe("Target branch name"),
-    title: z.string().describe("Merge request title"),
-    description: z.string().optional().describe("MR description (supports Markdown)"),
-    labels: z.string().optional().describe("Comma-separated list of label names"),
-    milestone_id: z.number().optional().describe("Milestone ID to assign"),
-    assignee_ids: z.array(z.number()).optional().describe("Array of user IDs to assign"),
-    reviewer_ids: z.array(z.number()).optional().describe("Array of user IDs to request review from"),
-    remove_source_branch: z.boolean().optional().default(false).describe("Remove source branch after merge"),
-    squash: z.boolean().optional().default(false).describe("Squash commits on merge"),
-    draft: z.boolean().optional().default(false).describe("Create as draft/WIP MR"),
-  }),
-  handler: async (args: any) => {
-    try {
-      const token = checkGitLabAuth();
-      const encodedProjectId = encodeURIComponent(args.project_id);
-      
-      const body: any = {
-        source_branch: args.source_branch,
-        target_branch: args.target_branch,
-        title: args.title,
-      };
-      if (args.description) body.description = args.description;
-      if (args.labels) body.labels = args.labels;
-      if (args.milestone_id) body.milestone_id = args.milestone_id;
-      if (args.assignee_ids) body.assignee_ids = args.assignee_ids;
-      if (args.reviewer_ids) body.reviewer_ids = args.reviewer_ids;
-      if (args.remove_source_branch) body.remove_source_branch = args.remove_source_branch;
-      if (args.squash) body.squash = args.squash;
-      if (args.draft) body.title = `Draft: ${args.title}`;
-      
-      const data = await gitlabPost(`${GITLAB_API_BASE}/projects/${encodedProjectId}/merge_requests`, token, body);
-      return formatToolResponse(data);
-    } catch (error) {
-      return formatToolResponse({
-        error: `Failed to create merge request: ${error instanceof Error ? error.message : String(error)}`
-      });
-    }
-  },
-};
-
-export const gitlab_update_merge_request = {
-  name: "gitlab_update_merge_request",
-  description: "Update an existing merge request",
-  inputSchema: z.object({
-    project_id: z.string().describe("Project ID or URL-encoded project path"),
-    merge_request_iid: z.number().describe("Merge request IID"),
-    title: z.string().optional().describe("New MR title"),
-    description: z.string().optional().describe("New MR description"),
-    labels: z.string().optional().describe("Comma-separated list of label names"),
-    milestone_id: z.number().optional().describe("Milestone ID to assign"),
-    assignee_ids: z.array(z.number()).optional().describe("Array of user IDs to assign"),
-    reviewer_ids: z.array(z.number()).optional().describe("Array of user IDs to request review from"),
-    state_event: z.enum(["close", "reopen"]).optional().describe("Close or reopen the MR"),
-    target_branch: z.string().optional().describe("Change target branch"),
-    remove_source_branch: z.boolean().optional().describe("Remove source branch after merge"),
-    squash: z.boolean().optional().describe("Squash commits on merge"),
-  }),
-  handler: async (args: any) => {
-    try {
-      const token = checkGitLabAuth();
-      const encodedProjectId = encodeURIComponent(args.project_id);
-      
-      const body: any = {};
-      if (args.title) body.title = args.title;
-      if (args.description !== undefined) body.description = args.description;
-      if (args.labels !== undefined) body.labels = args.labels;
-      if (args.milestone_id !== undefined) body.milestone_id = args.milestone_id;
-      if (args.assignee_ids) body.assignee_ids = args.assignee_ids;
-      if (args.reviewer_ids) body.reviewer_ids = args.reviewer_ids;
-      if (args.state_event) body.state_event = args.state_event;
-      if (args.target_branch) body.target_branch = args.target_branch;
-      if (args.remove_source_branch !== undefined) body.remove_source_branch = args.remove_source_branch;
-      if (args.squash !== undefined) body.squash = args.squash;
-      
-      const data = await gitlabPut(`${GITLAB_API_BASE}/projects/${encodedProjectId}/merge_requests/${args.merge_request_iid}`, token, body);
-      return formatToolResponse(data);
-    } catch (error) {
-      return formatToolResponse({
-        error: `Failed to update merge request: ${error instanceof Error ? error.message : String(error)}`
-      });
-    }
-  },
-};
 
 export const gitlab_merge_merge_request = {
   name: "gitlab_merge_merge_request",
@@ -888,13 +799,9 @@ export const gitlabAPITools = [
   // Merge Requests
   gitlab_list_merge_requests,
   gitlab_get_merge_request,
-  gitlab_create_merge_request,
-  gitlab_update_merge_request,
-  gitlab_merge_merge_request,
   gitlab_list_mr_changes,
   gitlab_list_mr_notes,
   gitlab_create_mr_note,
-  gitlab_approve_merge_request,
   // Global Search
   gitlab_search_issues_global,
   gitlab_search_merge_requests_global,
