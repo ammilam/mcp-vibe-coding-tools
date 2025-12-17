@@ -469,3 +469,94 @@ Run code linter.
 ```
 Lint the code and fix issues
 ```
+
+## Kubernetes Tools
+
+### kubectl_get_pods
+Get list of pods in a namespace.
+- Parameters: namespace, labelSelector, allNamespaces
+
+### kubectl_describe_pod
+Get detailed information about a specific pod.
+- Parameters: name, namespace
+
+### kubectl_get_logs
+Get logs from a pod.
+- Parameters: name, namespace, container, tail, previous
+
+### kubectl_get_deployments
+Get list of deployments in a namespace.
+- Parameters: namespace, allNamespaces
+
+### kubectl_get_services
+Get list of services in a namespace.
+- Parameters: namespace, allNamespaces
+
+### kubectl_get_events
+Get events in a namespace to debug issues.
+- Parameters: namespace, fieldSelector
+
+### kubectl_get_resource_status
+Get status of any Kubernetes resource.
+- Parameters: resourceType, name, namespace
+
+## GitHub Actions Tools
+
+**Requires GITHUB_API_KEY environment variable**
+
+### github_list_workflow_runs
+List workflow runs for a repository.
+- Parameters: owner, repo, workflow, status, branch, perPage
+
+### github_get_workflow_run
+Get details of a specific workflow run.
+- Parameters: owner, repo, runId
+
+### github_list_workflow_jobs
+List jobs for a workflow run.
+- Parameters: owner, repo, runId
+
+### github_get_job_logs
+Get logs for a specific job.
+- Parameters: owner, repo, jobId
+
+### github_list_workflows
+List all workflows in a repository.
+- Parameters: owner, repo
+
+### github_get_workflow_run_logs
+Download logs for an entire workflow run (base64-encoded zip).
+- Parameters: owner, repo, runId
+
+## GitLab CI/CD Tools
+
+**Requires GITLAB_API_KEY environment variable**  
+**Optional: GITLAB_HOST for self-hosted instances**
+
+### gitlab_list_pipelines
+List pipelines for a GitLab project.
+- Parameters: projectId, status, ref, perPage
+
+### gitlab_get_pipeline
+Get details of a specific pipeline.
+- Parameters: projectId, pipelineId
+
+### gitlab_list_pipeline_jobs
+List jobs in a pipeline.
+- Parameters: projectId, pipelineId, scope
+
+### gitlab_get_job
+Get details of a specific job.
+- Parameters: projectId, jobId
+
+### gitlab_get_job_trace
+Get the trace (logs) of a job.
+- Parameters: projectId, jobId
+
+### gitlab_list_project_jobs
+List all jobs in a project.
+- Parameters: projectId, scope, perPage
+
+### gitlab_get_pipeline_variables
+Get variables used in a pipeline.
+- Parameters: projectId, pipelineId

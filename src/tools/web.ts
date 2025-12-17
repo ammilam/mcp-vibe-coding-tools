@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from "axios";
 import { formatToolResponse } from "../utils/response.js";
 import * as cheerio from "cheerio";
 import { z } from "zod";
@@ -7,26 +6,29 @@ export const webTools = [
   {
     name: "fetch_webpage",
     description: "Fetch content from a webpage",
-    inputSchema: z.object({
+    inputSchema: {
       url: z.string().describe("URL to fetch"),
       headers: z.record(z.string()).describe("Custom HTTP headers").optional(),
-    }),
+    },
     handler: async (args: any) => {
-      const response = await axios.get(args.url, {
+      const response = await fetch(args.url, {
         headers: args.headers || {
           "User-Agent": "MCP-Vibe-Coding-Tools/1.0",
         },
-        timeout: 30000,
+        signal: AbortSignal.timeout(30000),
       });
+      
+      const contentType = response.headers.get("content-type") || "";
+      const data = await response.text();
       
       const result = {
         success: true,
         url: args.url,
         status: response.status,
         statusText: response.statusText,
-        headers: response.headers,
-        data: response.data,
-        contentType: response.headers["content-type"],
+        headers: Object.fromEntries(response.headers.entries()),
+        data,
+        contentType,
       };
       return formatToolResponse(result);
     },
@@ -34,11 +36,11 @@ export const webTools = [
   {
     name: "parse_html",
     description: "Parse HTML and extract data using CSS selectors",
-    inputSchema: z.object({
+    inputSchema: {
       html: z.string().describe("HTML content to parse"),
       selector: z.string().describe("CSS selector to extract elements"),
       attribute: z.string().describe("Attribute to extract (default: text content)").optional(),
-    }),
+    },
     handler: async (args: any) => {
       const $ = cheerio.load(args.html);
       const elements = $(args.selector);
@@ -64,10 +66,10 @@ export const webTools = [
   {
     name: "extract_links",
     description: "Extract all links from HTML",
-    inputSchema: z.object({
+    inputSchema: {
       html: z.string().describe("HTML content to parse"),
       baseUrl: z.string().describe("Base URL for resolving relative links").optional(),
-    }),
+    },
     handler: async (args: any) => {
       const $ = cheerio.load(args.html);
       const links: string[] = [];
@@ -99,21 +101,23 @@ export const webTools = [
   {
     name: "download_file",
     description: "Download a file from a URL",
-    inputSchema: z.object({
+    inputSchema: {
       url: z.string().describe("URL to download from"),
-    }),
+    },
     handler: async (args: any) => {
-      const response = await axios.get(args.url, {
-        responseType: "arraybuffer",
-        timeout: 60000,
+      const response = await fetch(args.url, {
+        signal: AbortSignal.timeout(60000),
       });
+      
+      const arrayBuffer = await response.arrayBuffer();
+      const contentType = response.headers.get("content-type") || "";
       
       const result = {
         success: true,
         url: args.url,
-        size: response.data.length,
-        contentType: response.headers["content-type"],
-        data: Buffer.from(response.data).toString("base64"),
+        size: arrayBuffer.byteLength,
+        contentType,
+        data: Buffer.from(arrayBuffer).toString("base64"),
       };
       return formatToolResponse(result);
     },

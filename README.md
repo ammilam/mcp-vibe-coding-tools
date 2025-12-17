@@ -63,7 +63,7 @@ This is usually a **client cache issue**, not a server issue. See [TROUBLESHOOTI
 
 Version mismatches between package.json and node_modules will break the server.
 
-## 📦 100+ Production-Ready Tools Across 14 Categories
+## 📦 100+ Production-Ready Tools Across 17 Categories
 
 ### Filesystem Operations (6 tools)
 
@@ -236,6 +236,85 @@ Combine and analyze multiple log files:
 - Extract time ranges
 - Count entries by category
 - **See big picture across all logs**
+
+### Kubernetes Operations (7 tools)
+
+#### `kubectl_get_pods`
+List pods in a namespace with status information.
+
+#### `kubectl_describe_pod`
+Get detailed information about a specific pod.
+
+#### `kubectl_get_logs`
+Fetch logs from a pod with filtering options.
+
+#### `kubectl_get_deployments`
+List all deployments with replica status.
+
+#### `kubectl_get_services`
+List all services with IP and port information.
+
+#### `kubectl_get_events`
+Get cluster events for debugging issues.
+
+#### `kubectl_get_resource_status`
+Get status of any Kubernetes resource type.
+
+**Note:** All kubectl tools are read-only - for validation and debugging only, no destructive operations.
+
+### GitHub Actions (6 tools)
+
+#### `github_list_workflow_runs`
+List workflow runs with optional filters (status, branch).
+
+#### `github_get_workflow_run`
+Get details of a specific workflow run.
+
+#### `github_list_workflow_jobs`
+List all jobs in a workflow run.
+
+#### `github_get_job_logs`
+Fetch logs for a specific job.
+
+#### `github_list_workflows`
+List all workflows in a repository.
+
+#### `github_get_workflow_run_logs`
+Download complete workflow run logs as base64-encoded zip.
+
+**Environment Variable Required:** 
+- `GITHUB_API_KEY` - GitHub Personal Access Token with `repo` and `actions:read` scopes
+
+**Error Handling:** Tools only error when invoked without `GITHUB_API_KEY` set - they do NOT error on server startup.
+
+### GitLab CI/CD (7 tools)
+
+#### `gitlab_list_pipelines`
+List pipelines for a project with optional filters.
+
+#### `gitlab_get_pipeline`
+Get detailed information about a specific pipeline.
+
+#### `gitlab_list_pipeline_jobs`
+List all jobs in a pipeline.
+
+#### `gitlab_get_job`
+Get details of a specific job including artifacts info.
+
+#### `gitlab_get_job_trace`
+Fetch job logs/trace output.
+
+#### `gitlab_list_project_jobs`
+List all jobs in a project with filtering.
+
+#### `gitlab_get_pipeline_variables`
+Get variables used in a pipeline execution.
+
+**Environment Variables Required:**
+- `GITLAB_API_KEY` - GitLab Personal Access Token or Project Access Token with `read_api` scope
+- `GITLAB_HOST` (optional) - GitLab instance URL (default: `https://gitlab.com` for GitLab.com, or set to your self-hosted instance)
+
+**Error Handling:** Tools only error when invoked without `GITLAB_API_KEY` set - they do NOT error on server startup.
 
 ### **📋 Planning & Requirements (3 tools)**
 

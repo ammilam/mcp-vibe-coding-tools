@@ -11,7 +11,9 @@ import { pythonTools } from "./tools/python.js";
 import { testTools } from "./tools/testing.js";
 import { automationTools } from "./tools/automation.js";
 import { diagnosticsTools } from "./tools/diagnostics.js";
-
+import { kubernetesTools } from "./tools/kubernetes.js";
+import { githubActionsTools } from "./tools/github-actions.js";
+import { gitlabCITools } from "./tools/gitlab-ci.js";
 // Create MCP server using modern McpServer class
 const server = new McpServer(
   {
@@ -35,8 +37,9 @@ const allTools = [
   ...pythonTools,
   ...testTools,
   ...automationTools,
-  ...diagnosticsTools,
-];
+  ...diagnosticsTools,  ...kubernetesTools,
+  ...githubActionsTools,
+  ...gitlabCITools,];
 
 // Register each tool with the server
 for (const tool of allTools) {
@@ -44,7 +47,7 @@ for (const tool of allTools) {
     tool.name,
     {
       description: tool.description,
-      inputSchema: tool.inputSchema,
+      inputSchema: tool.inputSchema as any,
     },
     tool.handler
   );
