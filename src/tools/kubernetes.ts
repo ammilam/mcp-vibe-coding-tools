@@ -9,11 +9,11 @@ export const kubernetesTools = [
   {
     name: "kubectl_get_pods",
     description: "Get list of pods in a namespace",
-    inputSchema: {
+    inputSchema: z.object({
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
       labelSelector: z.string().describe("Label selector to filter pods (e.g., 'app=myapp')").optional(),
       allNamespaces: z.boolean().describe("Get pods from all namespaces").default(false).optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         let command = "kubectl get pods -o json";
@@ -56,10 +56,10 @@ export const kubernetesTools = [
   {
     name: "kubectl_describe_pod",
     description: "Get detailed information about a specific pod",
-    inputSchema: {
+    inputSchema: z.object({
       name: z.string().describe("Pod name"),
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         const { stdout } = await execAsync(
@@ -83,13 +83,13 @@ export const kubernetesTools = [
   {
     name: "kubectl_get_logs",
     description: "Get logs from a pod",
-    inputSchema: {
+    inputSchema: z.object({
       name: z.string().describe("Pod name"),
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
       container: z.string().describe("Container name (if pod has multiple containers)").optional(),
       tail: z.number().describe("Number of lines to tail (default: 100)").default(100).optional(),
       previous: z.boolean().describe("Get logs from previous container instance").default(false).optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         let command = `kubectl logs ${args.name} -n ${args.namespace || "default"}`;
@@ -127,10 +127,10 @@ export const kubernetesTools = [
   {
     name: "kubectl_get_deployments",
     description: "Get list of deployments in a namespace",
-    inputSchema: {
+    inputSchema: z.object({
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
       allNamespaces: z.boolean().describe("Get deployments from all namespaces").default(false).optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         let command = "kubectl get deployments -o json";
@@ -168,10 +168,10 @@ export const kubernetesTools = [
   {
     name: "kubectl_get_services",
     description: "Get list of services in a namespace",
-    inputSchema: {
+    inputSchema: z.object({
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
       allNamespaces: z.boolean().describe("Get services from all namespaces").default(false).optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         let command = "kubectl get services -o json";
@@ -210,10 +210,10 @@ export const kubernetesTools = [
   {
     name: "kubectl_get_events",
     description: "Get events in a namespace to debug issues",
-    inputSchema: {
+    inputSchema: z.object({
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
       fieldSelector: z.string().describe("Field selector to filter events (e.g., 'type=Warning')").optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         let command = `kubectl get events -n ${args.namespace || "default"} -o json --sort-by='.lastTimestamp'`;
@@ -250,11 +250,11 @@ export const kubernetesTools = [
   {
     name: "kubectl_get_resource_status",
     description: "Get status of any Kubernetes resource",
-    inputSchema: {
+    inputSchema: z.object({
       resourceType: z.string().describe("Resource type (e.g., 'pod', 'deployment', 'statefulset', 'configmap')"),
       name: z.string().describe("Resource name"),
       namespace: z.string().describe("Kubernetes namespace (default: default)").default("default").optional(),
-    },
+    }),
     handler: async (args: any) => {
       try {
         const { stdout } = await execAsync(

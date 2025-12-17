@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "description": "Comprehensive MCP server providing filesystem, CLI, git, web scraping, and project management tools for AI coding assistants",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/mcp-vibe-coding-tools.js",
   "bin": {
-    "mcp-vibe-coding-tools": "./dist/index.js"
+    "mcp-vibe-coding-tools": "./dist/mcp-vibe-coding-tools.js",
+    "mcp-gitops-tools": "./dist/gitops-server.js"
   },
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
     "prepare": "npm run build",
-    "inspector": "mcp-inspector dist/index.js"
+    "inspector": "mcp-inspector dist/mcp-vibe-coding-tools.js"
   },
   "keywords": [
     "mcp",

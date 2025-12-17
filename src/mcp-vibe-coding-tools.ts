@@ -12,9 +12,6 @@ import { testTools } from "./tools/testing.js";
 import { automationTools } from "./tools/automation.js";
 import { diagnosticsTools } from "./tools/diagnostics.js";
 import { kubernetesTools } from "./tools/kubernetes.js";
-import { githubActionsTools } from "./tools/github-actions.js";
-import { gitlabCITools } from "./tools/gitlab-ci.js";
-import { gitlabAPITools } from "./tools/gitlab-api.js";
 import { ragTools } from "./tools/rag.js";
 // Create MCP server using modern McpServer class
 const server = new McpServer(
@@ -40,9 +37,6 @@ const allTools = [
   ...testTools,
   ...automationTools,
   ...diagnosticsTools,  ...kubernetesTools,
-  ...githubActionsTools,
-  ...gitlabCITools,
-  ...gitlabAPITools,
   ...ragTools,
 ];
 

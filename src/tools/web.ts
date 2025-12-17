@@ -6,10 +6,10 @@ export const webTools = [
   {
     name: "fetch_webpage",
     description: "Fetch content from a webpage",
-    inputSchema: {
+    inputSchema: z.object({
       url: z.string().describe("URL to fetch"),
       headers: z.record(z.string()).describe("Custom HTTP headers").optional(),
-    },
+    }),
     handler: async (args: any) => {
       const response = await fetch(args.url, {
         headers: args.headers || {
@@ -36,11 +36,11 @@ export const webTools = [
   {
     name: "parse_html",
     description: "Parse HTML and extract data using CSS selectors",
-    inputSchema: {
+    inputSchema: z.object({
       html: z.string().describe("HTML content to parse"),
       selector: z.string().describe("CSS selector to extract elements"),
       attribute: z.string().describe("Attribute to extract (default: text content)").optional(),
-    },
+    }),
     handler: async (args: any) => {
       const $ = cheerio.load(args.html);
       const elements = $(args.selector);
@@ -66,10 +66,10 @@ export const webTools = [
   {
     name: "extract_links",
     description: "Extract all links from HTML",
-    inputSchema: {
+    inputSchema: z.object({
       html: z.string().describe("HTML content to parse"),
       baseUrl: z.string().describe("Base URL for resolving relative links").optional(),
-    },
+    }),
     handler: async (args: any) => {
       const $ = cheerio.load(args.html);
       const links: string[] = [];
@@ -101,9 +101,9 @@ export const webTools = [
   {
     name: "download_file",
     description: "Download a file from a URL",
-    inputSchema: {
+    inputSchema: z.object({
       url: z.string().describe("URL to download from"),
-    },
+    }),
     handler: async (args: any) => {
       const response = await fetch(args.url, {
         signal: AbortSignal.timeout(60000),

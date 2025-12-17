@@ -63,7 +63,23 @@ This is usually a **client cache issue**, not a server issue. See [TROUBLESHOOTI
 
 Version mismatches between package.json and node_modules will break the server.
 
-## 📦 100+ Production-Ready Tools Across 17 Categories
+## 📦 Two MCP Servers
+
+This package provides **two separate MCP servers**:
+
+### 1. `mcp-vibe-coding-tools` (Main Server)
+Local development tools for filesystem, git, testing, automation, diagnostics, kubernetes, and RAG.
+
+**Entry point:** `dist/mcp-vibe-coding-tools.js`
+
+### 2. `mcp-gitops-tools` (GitOps Server)
+Remote GitOps operations for GitHub Actions, GitLab CI/CD, and GitLab API.
+
+**Entry point:** `dist/gitops-server.js`
+
+---
+
+## 📦 114 Production-Ready Tools Across 17 Categories
 
 ### Filesystem Operations (6 tools)
 
@@ -237,6 +253,28 @@ Combine and analyze multiple log files:
 - Count entries by category
 - **See big picture across all logs**
 
+#### `get_xcode_logs`
+
+Get Xcode build logs, crash logs, and simulator logs:
+- Build logs from DerivedData
+- Simulator runtime logs
+- Crash reports from DiagnosticReports
+- Device logs (requires libimobiledevice)
+
+#### `get_android_logs`
+
+Get Android logcat and build logs:
+- Logcat with priority/tag filtering
+- Gradle build logs
+- Parse structured log format
+
+#### `get_react_native_logs`
+
+Get React Native Metro bundler and app logs:
+- Metro bundler output
+- iOS simulator logs
+- Android logcat for RN apps
+
 ### Kubernetes Operations (7 tools)
 
 #### `kubectl_get_pods`
@@ -293,9 +331,8 @@ Enable local document search and retrieval for AI coding assistants. Perfect for
 
 **Environment Variables:**
 - `RAG_DOCS_PATH` - **Required** - Path to directory containing documents to index
-- `RAG_INDEX_PATH` - Optional - Where to store the index (default: `.rag-index` in current directory)
-- `RAG_CHUNK_SIZE` - Optional - Characters per chunk (default: 1000)
-- `RAG_CHUNK_OVERLAP` - Optional - Overlap between chunks (default: 200)
+
+**Note:** The index is automatically stored in `.rag-index` folder inside `RAG_DOCS_PATH`. Chunk size (1000) and overlap (200) are sensible defaults.
 
 #### `rag_index_documents`
 Index local documents for semantic search:
@@ -342,11 +379,10 @@ Check RAG system status:
   "mcpServers": {
     "vibe-coding-tools": {
       "command": "node",
-      "args": ["/path/to/mcp-vibe-coding-tools/dist/index.js"],
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/mcp-vibe-coding-tools.js"],
       "env": {
         "WORKSPACE_PATH": "/path/to/project",
-        "RAG_DOCS_PATH": "/path/to/docs-to-search",
-        "RAG_INDEX_PATH": "/path/to/store/index"
+        "RAG_DOCS_PATH": "/path/to/docs-to-search"
       }
     }
   }
@@ -375,6 +411,43 @@ List all jobs in a project with filtering.
 
 #### `gitlab_get_pipeline_variables`
 Get variables used in a pipeline execution.
+
+### GitLab API (23 tools)
+
+Comprehensive GitLab API integration for groups, projects, issues, and merge requests.
+
+#### Groups
+- `gitlab_get_group` - Get group details
+- `gitlab_list_group_subgroups` - List subgroups
+- `gitlab_list_group_projects` - List projects in group
+- `gitlab_list_descendant_groups` - List all nested subgroups
+
+#### Projects
+- `gitlab_get_project` - Get project details
+- `gitlab_list_projects` - List accessible projects
+
+#### Issues
+- `gitlab_list_issues` - List issues with filters
+- `gitlab_get_issue` - Get issue details
+- `gitlab_create_issue` - Create new issue
+- `gitlab_update_issue` - Update existing issue
+- `gitlab_list_issue_notes` - List issue comments
+- `gitlab_create_issue_note` - Add issue comment
+
+#### Merge Requests
+- `gitlab_list_merge_requests` - List MRs with filters
+- `gitlab_get_merge_request` - Get MR details
+- `gitlab_merge_merge_request` - Merge an MR
+- `gitlab_list_mr_changes` - Get MR diff
+- `gitlab_list_mr_notes` - List MR comments
+- `gitlab_create_mr_note` - Add MR comment
+- `gitlab_approve_merge_request` - Approve MR
+
+#### Global Search
+- `gitlab_search_issues_global` - Search issues across all projects
+- `gitlab_search_merge_requests_global` - Search MRs across all projects
+- `gitlab_search_group_issues` - Search issues in a group
+- `gitlab_search_group_merge_requests` - Search MRs in a group
 
 **Environment Variables Required:**
 - `GITLAB_API_KEY` - GitLab Personal Access Token or Project Access Token with `read_api` scope
@@ -559,13 +632,23 @@ npm run build
     "mcp-vibe-coding-tools": {
       "type": "stdio",
       "command": "node",
-      "args": ["/path/to/mcp-vibe-coding-tools/dist/index.js"]
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/mcp-vibe-coding-tools.js"]
+    },
+    "mcp-gitops-tools": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/gitops-server.js"],
+      "env": {
+        "GITHUB_API_KEY": "your-github-token",
+        "GITLAB_API_KEY": "your-gitlab-token",
+        "GITLAB_HOST": "https://gitlab.com"
+      }
     }
   }
 }
 ```
 
-Replace `/path/to/mcp-vibe-coding-tools/dist/index.js` with the absolute path to where you cloned this repo. Then it works in **any project** you open in VS Code!
+Replace `/path/to/mcp-vibe-coding-tools` with the absolute path to where you cloned this repo. Then it works in **any project** you open in VS Code!
 
 ### For Claude Desktop
 
@@ -576,9 +659,18 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "vibe-coding-tools": {
       "command": "node",
-      "args": ["/path/to/mcp-vibe-coding-tools/dist/index.js"],
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/mcp-vibe-coding-tools.js"],
       "env": {
         "WORKSPACE_PATH": "/path/to/your/current/project"
+      }
+    },
+    "gitops-tools": {
+      "command": "node",
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/gitops-server.js"],
+      "env": {
+        "GITHUB_API_KEY": "your-github-token",
+        "GITLAB_API_KEY": "your-gitlab-token",
+        "GITLAB_HOST": "https://gitlab.com"
       }
     }
   }
@@ -596,7 +688,9 @@ The server uses **stdio transport** (standard for MCP) - configure similarly in:
 - Continue
 - Any MCP-compatible client
 
-Same pattern: `node /path/to/server/dist/index.js` with optional `WORKSPACE_PATH` env var.
+Same pattern:
+- **Main server:** `node /path/to/server/dist/mcp-vibe-coding-tools.js` with optional `WORKSPACE_PATH` env var
+- **GitOps server:** `node /path/to/server/dist/gitops-server.js` with `GITHUB_API_KEY` and/or `GITLAB_API_KEY` env vars
 
 ## 🎯 Usage Examples
 
@@ -693,7 +787,7 @@ Built with:
 
 ## 🚦 Status
 
-- ✅ 45+ production tools
+- ✅ 114 production tools across 2 servers
 - ✅ Full autonomous workflow support
 - ✅ Multi-language support (JS/TS, Python, Rust, Go)
 - ✅ Comprehensive validation automation
