@@ -287,6 +287,72 @@ Download complete workflow run logs as base64-encoded zip.
 
 **Error Handling:** Tools only error when invoked without `GITHUB_API_KEY` set - they do NOT error on server startup.
 
+### RAG (Retrieval Augmented Generation) (6 tools)
+
+Enable local document search and retrieval for AI coding assistants. Perfect for searching through documentation, codebases, and reference materials.
+
+**Environment Variables:**
+- `RAG_DOCS_PATH` - **Required** - Path to directory containing documents to index
+- `RAG_INDEX_PATH` - Optional - Where to store the index (default: `.rag-index` in current directory)
+- `RAG_CHUNK_SIZE` - Optional - Characters per chunk (default: 1000)
+- `RAG_CHUNK_OVERLAP` - Optional - Overlap between chunks (default: 200)
+
+#### `rag_index_documents`
+Index local documents for semantic search:
+- Scans directory for supported file types
+- Chunks documents with configurable overlap
+- Builds TF-IDF index for semantic similarity
+- Incremental indexing (only re-indexes changed files)
+- Supports 30+ file extensions (md, ts, js, py, json, yaml, etc.)
+
+#### `rag_search`
+Search indexed documents using semantic similarity:
+- TF-IDF based semantic search
+- Returns top-K most relevant chunks
+- Configurable minimum similarity threshold
+- File path filtering with regex
+- **Perfect for finding relevant docs and code examples**
+
+#### `rag_get_context`
+Expand context around search results:
+- Get more lines before/after a match
+- Useful for understanding surrounding code
+- Configurable expansion range
+
+#### `rag_list_indexed`
+List all indexed documents:
+- Shows file paths, types, and chunk counts
+- Optional detailed chunk information
+- Index statistics and metadata
+
+#### `rag_clear_index`
+Clear the RAG index:
+- Requires confirmation flag
+- Removes all indexed documents
+
+#### `rag_status`
+Check RAG system status:
+- Shows if RAG is enabled
+- Configuration values
+- Index statistics if available
+
+**Example Configuration:**
+```json
+{
+  "mcpServers": {
+    "vibe-coding-tools": {
+      "command": "node",
+      "args": ["/path/to/mcp-vibe-coding-tools/dist/index.js"],
+      "env": {
+        "WORKSPACE_PATH": "/path/to/project",
+        "RAG_DOCS_PATH": "/path/to/docs-to-search",
+        "RAG_INDEX_PATH": "/path/to/store/index"
+      }
+    }
+  }
+}
+```
+
 ### GitLab CI/CD (7 tools)
 
 #### `gitlab_list_pipelines`
